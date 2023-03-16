@@ -1,9 +1,9 @@
 {
-  "folders": [ { "path": "/Users/Dave/git_repos/_packages/python/gocart" } ],
+  "folders": [ { "path": "/Users/Dave/git_repos/_packages_/python/gocart" } ],
   "settings": {
       "python_test":{
           "command": "/Users/Dave/anaconda/envs/gocart/bin/nose2",
-          "working_dir": "/Users/Dave/git_repos/gocart/gocart",
+          "working_dir": "/Users/Dave/git_repos/_packages_/python/gocart/gocart",
           "color_scheme": "dark"
     }
   }
