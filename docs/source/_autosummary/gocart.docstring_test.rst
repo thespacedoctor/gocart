@@ -1,38 +1,6 @@
-﻿docstring_test *(module)*
-================================
+﻿docstring_test (*function*)
+==================================
 
+.. currentmodule:: gocart
 
-
-.. automodule:: gocart.docstring_test
-
-
-    
-    
-
-    
-
-
-    
-
-    
-
-        
-
-
-
-    
-
-
-    
-    .. rubric:: Functions
-
-    .. autosummary::
-
-        
-          ~docsting_test
-        
-        
-
-
-    
-    
+.. autofunction:: docstring_test

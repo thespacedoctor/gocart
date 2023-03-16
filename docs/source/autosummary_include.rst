@@ -5,7 +5,6 @@
    :nosignatures:
 
    gocart.commonutils 
-   gocart.docstring_test
    gocart.utKit
 
 **Classes**
@@ -20,4 +19,4 @@
 .. autosummary::
    :nosignatures:
 
-   gocart.docstring_test.docsting_test 
+   gocart.docstring_test 

@@ -7,7 +7,6 @@ Modules
    :nosignatures:
 
    gocart.commonutils 
-   gocart.docstring_test
    gocart.utKit 
 
 
@@ -18,4 +17,4 @@ Functions
    :toctree: _autosummary
    :nosignatures:
 
-   gocart.docstring_test.docsting_test 
+   gocart.docstring_test 
