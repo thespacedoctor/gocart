@@ -23,7 +23,7 @@ Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs
 
 ## Features
 
-* 
+
 
 
 
