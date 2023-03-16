@@ -1,30 +1,38 @@
-docstring_test
-===================================================
+﻿docstring_test *(module)*
+================================
 
 
 
 .. automodule:: gocart.docstring_test
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
-    :member-order: bysource
-    
-    
+
+
     
     
 
     
+
+
+    
+
+    
+
+        
+
+
+
+    
+
+
     
     .. rubric:: Functions
 
     .. autosummary::
-    
-      ~docsting_test
-    
-    
 
-    
+        
+          ~docsting_test
+        
+        
+
+
     
     

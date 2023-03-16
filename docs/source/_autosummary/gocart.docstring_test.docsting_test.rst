@@ -1,5 +1,5 @@
-docsting_test
-===================================================================
+﻿docsting_test (*function*)
+================================================
 
 .. currentmodule:: gocart.docstring_test
 

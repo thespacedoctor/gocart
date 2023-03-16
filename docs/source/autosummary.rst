@@ -11,16 +11,6 @@ Modules
    gocart.utKit 
 
 
-Classes
--------
-
-.. autosummary::
-   :toctree: _autosummary
-   :nosignatures:
-
-   gocart.utKit.utKit 
-
-
 Functions
 ---------
 

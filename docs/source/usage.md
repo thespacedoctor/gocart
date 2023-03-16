@@ -2,7 +2,7 @@
 
 ```bash 
     
-    Documentation for gocart can be found here: http://gocart.readthedocs.org/en/stable
+    Documentation for gocart can be found here: http://gocart.readthedocs.org
     
     Usage:
         gocart init
