@@ -5,7 +5,7 @@ Check the API output here: file:///Users/Dave/git_repos/_templates_/python-packa
 """
 
 
-def docsting_test():
+def docstring_test():
     """
     *the database object for sherlock, setting up ssh tunnels and various database connections*
 
