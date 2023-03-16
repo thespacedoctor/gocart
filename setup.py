@@ -12,7 +12,6 @@ def readme():
 
 install_requires = [
     'pyyaml',
-    'gocart',
     'fundamentals'
 ]
 
