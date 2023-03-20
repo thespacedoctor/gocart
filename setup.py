@@ -12,7 +12,11 @@ def readme():
 
 install_requires = [
     'pyyaml',
-    'fundamentals'
+    'fundamentals',
+    'gcn-kafka',
+    'astropy',
+    'astropy-healpix',
+    'numpy'
 ]
 
 # READ THE DOCS SERVERS
