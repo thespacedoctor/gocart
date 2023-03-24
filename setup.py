@@ -14,9 +14,14 @@ install_requires = [
     'pyyaml',
     'fundamentals',
     'gcn-kafka',
-    'astropy',
+    'astropy==5.1.0',
     'astropy-healpix',
-    'numpy'
+    'numpy',
+    'matplotlib',
+    'healpy',
+    'pandas',
+    'tabulate',
+    'astropy_healpix'
 ]
 
 # READ THE DOCS SERVERS

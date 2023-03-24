@@ -16,12 +16,9 @@ import os
 os.environ['TERM'] = 'vt100'
 
 
-# OR YOU CAN REMOVE THE CLASS BELOW AND ADD A WORKER FUNCTION ... SNIPPET TRIGGER BELOW
-# xt-worker-def
-
 class lvk(object):
     """
-    *The worker class for the lvk module*
+    *The LVK event parser*
 
     **Key Arguments:**
         - ``log`` -- logger
@@ -49,9 +46,6 @@ class lvk(object):
     ```
 
     """
-    # Initialisation
-    # 1. @flagged: what are the unique attrributes for each object? Add them
-    # to __init__
 
     def __init__(
             self,
@@ -163,6 +157,39 @@ class lvk(object):
         self.log.debug('completed the ``parse`` method')
         return lvk
 
+    def aitoff_plot(
+            self):
+        """*plot map with an aitoff projection*
+
+        **Key Arguments:**
+            # -
+
+        **Return:**
+            - None
+
+        **Usage:**
+
+        ```python
+        usage code 
+        ```
+
+        ---
+
+        ```eval_rst
+        .. todo::
+
+            - add usage info
+            - create a sublime snippet for usage
+            - write a command-line tool for this method
+            - update package tutorial with command-line tool info if needed
+        ```
+        """
+        self.log.debug('starting the ``aitoff_plot`` method')
+
+        self.log.debug('completed the ``aitoff_plot`` method')
+        return None
+
+    # use the tab-trigger below for new method
     # xt-class-method
 
     # 5. @flagged: what actions of the base class(es) need ammending? ammend them here
