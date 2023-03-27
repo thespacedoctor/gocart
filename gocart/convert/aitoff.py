@@ -16,9 +16,6 @@ import os
 os.environ['TERM'] = 'vt100'
 
 
-# OR YOU CAN REMOVE THE CLASS BELOW AND ADD A WORKER FUNCTION ... SNIPPET TRIGGER BELOW
-# xt-worker-def
-
 class aitoff(object):
     """
     *The worker class for the aitoff module*
@@ -30,7 +27,7 @@ class aitoff(object):
 
     **Usage:**
 
-    To setup your logger, settings and database connections, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_). 
+    To setup your logger, settings and database connections, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_).
 
     To initiate a aitoff object, use the following:
 
@@ -45,7 +42,7 @@ class aitoff(object):
     ```
 
     ```python
-    usage code 
+    usage code
     ```
 
     """
@@ -95,10 +92,99 @@ class aitoff(object):
         ```
 
         ```python
-        usage code 
+        usage code
         ```
         """
         self.log.debug('starting the ``convert`` method')
+
+        import matplotlib.pyplot as plt
+        from . import healpix2cart
+        import astropy.units as u
+        import numpy as np
+        from astropy.coordinates import (SkyCoord, Galactic)
+
+        from matplotlib.projections.geo import GeoAxes
+
+        class ThetaFormatterShiftPi(GeoAxes.ThetaFormatter):
+            """Shifts labelling by pi
+            Shifts labelling from -180,180 to 0-360"""
+
+            def __call__(self, x, pos=None):
+                x -= np.pi
+                x = -x
+                return GeoAxes.ThetaFormatter.__call__(self, x, pos)
+
+        converter = healpix2cart(
+            log=self.log,
+            mapPath=self.mapPath,
+            settings=self.settings
+        )
+        wcs, mapDF = converter.convert()
+
+        # from tabulate import tabulate
+        # print(tabulate(mapDF.head(100), headers='keys', tablefmt='psql'))
+        # print(mapDF["RA"].min(), mapDF["RA"].max())
+        # print(mapDF["DEC"].min(), mapDF["DEC"].max())
+        # sys.exit(0)
+        mapDF = mapDF.iloc[::-1]
+        # RA RANGES FROM 0-360 ... NEED TO FLIP 360-0, AND THEN SHIFT BY 180 TO MATCH MATPLOTLIB FRAME
+        mapDF["RASHIFTED"] = -mapDF["RA"] + 180
+        data = mapDF["PROBDENSITY_DEG2"].values.reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
+
+        long = np.deg2rad(mapDF["RASHIFTED"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
+        lat = np.deg2rad(mapDF["DEC"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
+
+        # MATPLOTLIB IS DOING THE PROJECTION
+        cmap = "YlOrRd"
+        fig = plt.figure()
+
+        std = data.std()
+        mean = data.mean()
+
+        ax = fig.add_subplot(111, projection='aitoff')
+        # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
+        # FLIP LONGITUDE TO THE ASTRO CONVENTION
+        image = ax.pcolormesh(long, lat, data, rasterized=True, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
+
+        # GRATICULE
+        ax.set_longitude_grid(30)
+        ax.set_latitude_grid(15)
+        ax.xaxis.set_major_formatter(ThetaFormatterShiftPi(30))
+        ax.set_longitude_grid_ends(90)
+
+        if 1 == 1 or galacticPlane:
+            # LON:LAT is lon 0-360 at lat=0
+            lon_array = np.arange(0, 360)
+            lat = np.full_like(lon_array, 0)
+            galc = SkyCoord(l=lon_array, b=lat, frame=Galactic, unit=u.deg)
+            # INITATE AN ARRAY OF [0:0]
+            equatorial_array = galc.icrs
+            gRa = equatorial_array.ra.degree
+            gDec = equatorial_array.dec.degree
+            gx = np.remainder(gRa + 180, 360)
+            # SCALE CONVERSION TO [-180, 180]
+            ind = gx > 180
+            gx[ind] -= 360
+            # REVERSE RA SCALE
+            gx = -gx
+
+            ax.scatter(np.radians(gx), np.radians(gDec),
+                       color="#EFEEEC", alpha=1, s=100)
+
+        plt.show()
+
+        # # Save to FITS file
+        # hdu.writeto('/tmp/test.fits', overwrite=True)
+
+        # return
+
+        plt.subplot(projection=wcs)
+        plt.imshow(data, origin='lower')
+        plt.grid(color='white', ls='solid')
+
+        plt.show()
+
+        return
 
         import matplotlib.pyplot as plt
         from astropy.table import Table

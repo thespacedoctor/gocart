@@ -21,7 +21,8 @@ install_requires = [
     'healpy',
     'pandas',
     'tabulate',
-    'astropy_healpix'
+    'astropy_healpix',
+    'ligo.skymap'
 ]
 
 # READ THE DOCS SERVERS

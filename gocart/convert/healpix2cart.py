@@ -152,13 +152,13 @@ def create_wcs_and_pixels(log):
     """
     log.debug('starting the ``create_wcs_and_pixels`` method')
 
-    from astropy import wcs
+    from astropy.wcs import WCS
     import pandas as pd
     import numpy as np
     import astropy.units as u
 
     # CREATE A NEW WCS OBJECT.
-    w = wcs.WCS(naxis=2)
+    wcs = WCS(naxis=2)
 
     # DETERMINE THE PIXEL GRID X,Y RANGES
     pixelSizeDeg = 1.
@@ -168,17 +168,17 @@ def create_wcs_and_pixels(log):
     yRange = int(decRange / pixelSizeDeg)
 
     # SET THE PIXEL SIZE
-    w.wcs.cdelt = np.array([pixelSizeDeg, pixelSizeDeg])
+    wcs.wcs.cdelt = np.array([pixelSizeDeg, pixelSizeDeg])
     # SET THE REFERENCE PIXEL TO THE CENTRE PIXEL .. BOTTOM LEFT PIXEL IS 0,0 IN PYTHON (HENCE ADDTION OF 1)
-    w.wcs.crpix = [(xRange + 1) / 2., (yRange + 1) / 2.]
+    wcs.wcs.crpix = [(xRange + 1) / 2., (yRange + 1) / 2.]
 
     # FOR AN ORTHOGONAL GRID THE CRVAL2 VALUE MUST BE ZERO AND CRPIX2
     # MUST REFLECT THIS
-    w.wcs.crpix[1] -= w.wcs.crval[1] / w.wcs.cdelt[1]
-    w.wcs.crval[1] = 0
+    wcs.wcs.crpix[1] -= wcs.wcs.crval[1] / wcs.wcs.cdelt[1]
+    wcs.wcs.crval[1] = 0
 
     # SET COORDINATE TYPE TO CARTESIAN
-    w.wcs.ctype = ["RA---CAR", "DEC--CAR"]
+    wcs.wcs.ctype = ["RA---CAR", "DEC--CAR"]
 
     # CREATE THE DATA GRID
     x = np.arange(0, xRange, 1)
@@ -186,7 +186,7 @@ def create_wcs_and_pixels(log):
     X, Y = np.meshgrid(x, y)
 
     # FITS FORMAT -- BOTTOM LEFT PIXEL CENTRE IS 1,1, BUT WE ARE WORKING WITH PYTHON SO USE 0,0
-    ra, dec = w.wcs_pix2world(X, Y, 0)
+    ra, dec = wcs.wcs_pix2world(X, Y, 0)
     area = np.sin(np.deg2rad(np.abs(dec + 90)))
 
     # CREATE DATA FRAME FROM A DICTIONARY OF LISTS
@@ -200,7 +200,7 @@ def create_wcs_and_pixels(log):
     mapDF = pd.DataFrame(myDict)
 
     log.debug('completed the ``create_wcs_and_pixels`` method')
-    return w, mapDF
+    return wcs, mapDF
 
     # use the tab-trigger below for new method
     # xt-class-method
