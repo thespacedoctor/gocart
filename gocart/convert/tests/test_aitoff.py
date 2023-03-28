@@ -50,6 +50,7 @@ class test_aitoff(unittest.TestCase):
         converter = aitoff(
             log=log,
             mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+            outputFolder=pathToOutputDir,
             settings=settings
         )
         converter.convert()

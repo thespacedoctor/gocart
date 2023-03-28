@@ -38,7 +38,7 @@ class healpix2cart(object):
         mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
         settings=settings
     )
-    wcs, mapDF = converter.convert()
+    wcs, mapDF, header = converter.convert()
     ```
 
     """
@@ -65,6 +65,8 @@ class healpix2cart(object):
         **Return:**
             - ``wcs`` -- an astropy wcs object
             - ``mapDF`` -- the map converted cartesian format and recorded in a pandas dataframe.
+            - ``header`` -- the map header
+            -
 
         **Usage:**
 
@@ -75,7 +77,7 @@ class healpix2cart(object):
             mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
             settings=settings
         )
-        wcs, mapDF = converter.convert()
+        wcs, mapDF, header = converter.convert()
         ```
         """
         self.log.debug('starting the ``get`` method')
@@ -130,7 +132,7 @@ class healpix2cart(object):
         # print(totalProb)
 
         self.log.debug('completed the ``get`` method')
-        return wcs, mapDF
+        return wcs, mapDF, skymap.meta
 
 
 def create_wcs_and_pixels(log):
