@@ -161,7 +161,7 @@ def create_wcs_and_pixels(log):
     wcs = WCS(naxis=2)
 
     # DETERMINE THE PIXEL GRID X,Y RANGES
-    pixelSizeDeg = 1.
+    pixelSizeDeg = 0.2
     raRange = 360
     decRange = 180
     xRange = int(raRange / pixelSizeDeg)
@@ -187,7 +187,7 @@ def create_wcs_and_pixels(log):
 
     # FITS FORMAT -- BOTTOM LEFT PIXEL CENTRE IS 1,1, BUT WE ARE WORKING WITH PYTHON SO USE 0,0
     ra, dec = wcs.wcs_pix2world(X, Y, 0)
-    area = np.sin(np.deg2rad(np.abs(dec + 90)))
+    area = np.sin(np.deg2rad(np.abs(dec + 90))) * pixelSizeDeg ** 2
 
     # CREATE DATA FRAME FROM A DICTIONARY OF LISTS
     myDict = {
