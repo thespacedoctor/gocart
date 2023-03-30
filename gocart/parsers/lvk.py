@@ -9,6 +9,7 @@
 :Date Created:
     March 19, 2023
 """
+from gocart.commonutils import generate_skymap_stats
 from fundamentals import tools
 from builtins import object
 import sys
@@ -120,6 +121,7 @@ class lvk(object):
             os.makedirs(alertDir)
 
         # PARSE SKY MAP
+        header, extras = {}, {}
         if self.record.get('event', {}):
             skymap_str = self.record.get('event', {}).pop('skymap')
             if skymap_str:
@@ -142,52 +144,30 @@ class lvk(object):
                 with open(f"{alertDir}/{localisation}.multiorder.fits", "wb") as f:
                     f.write(skymap_bytes)
 
-                header = {k: v for k, v in skymap.meta.items()}
+                header = {k: v for k, v in skymap.meta.items() if k != "HISTORY"}
+
+                # GENERATE SOME EXTRA STATS
+                extras = generate_skymap_stats(
+                    log=self.log,
+                    skymap=skymap,
+                )
 
                 # WRITE ALERT TO YAML FILE
-                with open(alertDir + "/header.yaml", 'w') as stream:
-                    yaml.dump(header, stream, default_flow_style=False)
+                # with open(alertDir + "/header.yaml", 'w') as stream:
+                #     yaml.dump(header, stream, default_flow_style=False)
 
         # WRITE ALERT TO YAML FILE
-        with open(alertDir + "/alert.yaml", 'w') as stream:
-            yaml.dump(self.record, stream, default_flow_style=False)
+        # with open(alertDir + "/alert.yaml", 'w') as stream:
+        #     yaml.dump(self.record, stream, default_flow_style=False)
 
-            # SAVE THE FITS MAP
+        # MERGE HEADER AND ALERT INTO ONE FILE
+        meta = {"HEADER": header, "ALERT": self.record, "EXTRA": extras}
+
+        with open(alertDir + "/meta.yaml", 'w') as stream:
+            yaml.dump(meta, stream, default_flow_style=False)
 
         self.log.debug('completed the ``parse`` method')
         return lvk
-
-    def aitoff_plot(
-            self):
-        """*plot map with an aitoff projection*
-
-        **Key Arguments:**
-            # -
-
-        **Return:**
-            - None
-
-        **Usage:**
-
-        ```python
-        usage code 
-        ```
-
-        ---
-
-        ```eval_rst
-        .. todo::
-
-            - add usage info
-            - create a sublime snippet for usage
-            - write a command-line tool for this method
-            - update package tutorial with command-line tool info if needed
-        ```
-        """
-        self.log.debug('starting the ``aitoff_plot`` method')
-
-        self.log.debug('completed the ``aitoff_plot`` method')
-        return None
 
     # use the tab-trigger below for new method
     # xt-class-method
