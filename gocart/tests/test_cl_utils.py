@@ -45,7 +45,7 @@ if not os.path.exists(pathToOutputDir):
 class test_cl_utils(unittest.TestCase):
 
     def test_init(self):
-        # TEST CL-OPTIONS
+        # TEST CL-OPTIONS #
         command = "gocart init"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
