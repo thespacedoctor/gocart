@@ -13,7 +13,7 @@ doc = cl_utils.__doc__
 home = expanduser("~")
 
 packageDirectory = utKit("").get_project_root()
-settingsFile = packageDirectory + "/test_settings.yaml"
+settingsFile = home + "/git_repos/_misc_/settings/gocart/test_settings.yaml"
 
 su = tools(
     arguments={"settingsFile": settingsFile},
@@ -47,6 +47,13 @@ class test_cl_utils(unittest.TestCase):
     def test_init(self):
         # TEST CL-OPTIONS
         command = "gocart init"
+        args = docopt(doc, command.split(" ")[1:])
+        cl_utils.main(args)
+        return
+
+    def test_listen(self):
+        # TEST CL-OPTIONS
+        command = f"gocart -t listen -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
         return

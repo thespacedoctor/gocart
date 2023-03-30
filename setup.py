@@ -22,7 +22,8 @@ install_requires = [
     'pandas',
     'tabulate',
     'astropy_healpix',
-    'ligo.skymap'
+    'ligo.skymap',
+    'gcn-kafka'
 ]
 
 # READ THE DOCS SERVERS

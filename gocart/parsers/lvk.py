@@ -10,6 +10,7 @@
     March 19, 2023
 """
 from gocart.commonutils import generate_skymap_stats
+from gocart.convert import ascii
 from fundamentals import tools
 from builtins import object
 import sys
@@ -28,22 +29,17 @@ class lvk(object):
 
     **Usage:**
 
-    To setup your logger and settings, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_). 
+    To setup your logger and settings, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_).
 
-    To initiate a lvk object, use the following:
-
-    ```eval_rst
-    .. todo::
-
-        - add usage info
-        - create a sublime snippet for usage
-        - create cl-util for this class
-        - add a tutorial about ``lvk`` to documentation
-        - create a blog post about what ``lvk`` does
-    ```
+    To parse LVK kafka alerts, use the following:
 
     ```python
-    usage code 
+    from gocart.parsers import lvk
+    parser = lvk(
+        log=log,
+        record=record,
+        settings=settings
+    ).parse()
     ```
 
     """
@@ -73,6 +69,11 @@ class lvk(object):
         # WHERE TO DOWNLOAD MAPS TO
         if "download_dir" in self.settings["lvk"] and self.settings["lvk"]["download_dir"]:
             self.download_dir = self.settings["lvk"]["download_dir"]
+            # MAKE RELATIVE HOME PATH ABSOLUTE
+            from os.path import expanduser
+            home = expanduser("~")
+            if self.download_dir == "~":
+                self.download_dir = self.download_dir.replace("~", home)
         else:
             self.download_dir = "."
 
@@ -80,25 +81,7 @@ class lvk(object):
 
     def parse(self):
         """
-        *parse the lvk events*
-
-        **Return:**
-            - ``lvk``
-
-        **Usage:**
-
-        ```eval_rst
-        .. todo::
-
-            - add usage info
-            - create a sublime snippet for usage
-            - create cl-util for this method
-            - update the package tutorial if needed
-        ```
-
-        ```python
-        usage code 
-        ```
+        *parse the lvk events and write meta data and maps to file
         """
         self.log.debug('starting the ``parse`` method')
 
@@ -115,13 +98,13 @@ class lvk(object):
 
         # ONCE WE HAVE DECIDED TO SAVE THE EVENT/ALERT
         # RECURSIVELY CREATE MISSING DIRECTORIES
-        alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace("Z", "")
+        alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace(" ", "").replace("Z", "")
         alertDir = self.download_dir + "/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
         if not os.path.exists(alertDir):
             os.makedirs(alertDir)
 
         # PARSE SKY MAP
-        header, extras = {}, {}
+        header, extras, fitsPath = {}, {}, None
         if self.record.get('event', {}):
             skymap_str = self.record.get('event', {}).pop('skymap')
             if skymap_str:
@@ -141,7 +124,8 @@ class lvk(object):
 
                 localisation = skymap.meta["CREATOR"].lower()
 
-                with open(f"{alertDir}/{localisation}.multiorder.fits", "wb") as f:
+                fitsPath = f"{alertDir}/{localisation}.multiorder.fits"
+                with open(fitsPath, "wb") as f:
                     f.write(skymap_bytes)
 
                 header = {k: v for k, v in skymap.meta.items() if k != "HISTORY"}
@@ -152,26 +136,28 @@ class lvk(object):
                     skymap=skymap,
                 )
 
-                # WRITE ALERT TO YAML FILE
-                # with open(alertDir + "/header.yaml", 'w') as stream:
-                #     yaml.dump(header, stream, default_flow_style=False)
-
-        # WRITE ALERT TO YAML FILE
-        # with open(alertDir + "/alert.yaml", 'w') as stream:
-        #     yaml.dump(self.record, stream, default_flow_style=False)
-
         # MERGE HEADER AND ALERT INTO ONE FILE
         meta = {"HEADER": header, "ALERT": self.record, "EXTRA": extras}
 
         with open(alertDir + "/meta.yaml", 'w') as stream:
             yaml.dump(meta, stream, default_flow_style=False)
 
+        if fitsPath:
+            c = ascii(
+                log=self.log,
+                mapPath=fitsPath,
+                settings=self.settings
+            )
+            asciiContent = c.convert(outputFilepath=alertDir + "/skymap.csv")
+
+            from gocart.convert import aitoff
+            c = aitoff(
+                log=self.log,
+                mapPath=fitsPath,
+                outputFolder=alertDir,
+                settings=self.settings
+            )
+            c.convert()
+
         self.log.debug('completed the ``parse`` method')
         return lvk
-
-    # use the tab-trigger below for new method
-    # xt-class-method
-
-    # 5. @flagged: what actions of the base class(es) need ammending? ammend them here
-    # Override Method Attributes
-    # method-override-tmpx

@@ -23,7 +23,7 @@ class ascii(object):
 
     **Key Arguments:**
         - ``log`` -- logger
-        - ``mapPath`` -- path the the healpix map
+        - ``mapPath`` -- path the the healpix map or an astropy skymap table
         - ``settings`` -- the settings dictionary
 
     **Usage:**

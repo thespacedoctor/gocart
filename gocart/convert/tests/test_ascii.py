@@ -52,7 +52,7 @@ class test_ascii(unittest.TestCase):
         from gocart.convert import ascii
         c = ascii(
             log=log,
-            mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+            mapPath=pathToOutputDir + "/bayestar.multiorder.02.fits",
             settings=settings
         )
         asciiContent = c.convert(outputFilepath=pathToOutputDir + "skymap.csv")

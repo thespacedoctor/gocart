@@ -24,7 +24,7 @@ def flatten_healpix_map(
 
     **Key Arguments:**
         - ``log`` -- logger
-        - ``mapPath`` -- path to the multiorder map.
+        - ``mapPath`` -- path to the multiorder map
         - ``nside`` -- the nside index to flatten the map to. Default *64* (~0.9 deg2 pixels)
 
     **Return:**

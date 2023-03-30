@@ -123,7 +123,7 @@ class aitoff(object):
         # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
         std = data.std()
         mean = data.mean()
-        image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
+        # image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
 
         # GRATICULE
         ax.set_longitude_grid(30)
@@ -155,9 +155,15 @@ class aitoff(object):
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
             sun = get_sun(t).icrs
+            print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
+            print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
+            sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360
-            sun.ra.degree = -sun.ra.degree
+
+            sun.ra.radian = np.deg2rad(sun.ra.degree)
+            print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
+            print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
 
             # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
             nlons = 1441
@@ -188,7 +194,7 @@ class aitoff(object):
             contours = mapDF["CUMPROB"].values.reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
 
             line_c = ax.contour(long, lat,
-                                contours, levels=[90], colors=['#93a1a1'], linewidths=0.5, zorder=2)
+                                contours, levels=[0, 50, 90], colors=['r', 'g', 'b'], linewidths=0.5, zorder=2)
             this = ax.clabel(line_c, inline=True, fontsize=6, colors=['#93a1a1'], fmt='{:.0f} '.format)
 
         ax.tick_params(axis='x', labelsize=12)

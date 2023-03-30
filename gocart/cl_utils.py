@@ -5,23 +5,24 @@ Documentation for gocart can be found here: http://gocart.readthedocs.org
 
 Usage:
     gocart init
-    gocart [-s <pathToSettingsFile>]  
+    gocart [-t] listen [-s <pathToSettingsFile>]  
 
 Options:
     init                                   setup the gocart settings file for the first time
     -h, --help                             show this help message
     -v, --version                          show version
     -s, --settings <pathToSettingsFile>    the settings file
+    -t, --test                             test, only collect 1 map
 """
+from subprocess import Popen, PIPE, STDOUT
+from fundamentals import tools, times
+from docopt import docopt
+import pickle
+import glob
+import readline
 import sys
 import os
 os.environ['TERM'] = 'vt100'
-import readline
-import glob
-import pickle
-from docopt import docopt
-from fundamentals import tools, times
-from subprocess import Popen, PIPE, STDOUT
 
 
 def tab_complete(text, state):
@@ -57,10 +58,22 @@ def main(arguments=None):
         else:
             varname = arg.replace("<", "").replace(">", "")
         a[varname] = val
-        if arg == "--dbConn":
-            dbConn = val
-            a["dbConn"] = val
         log.debug('%s = %s' % (varname, val,))
+
+    if settings["gcn-kafka"]["group_id"] == "XXXX":
+
+        import uuid as pyuuid
+        group_id = pyuuid.uuid1().int
+        settings["gcn-kafka"]["group_id"] = group_id
+
+        from os.path import expanduser
+        home = expanduser("~")
+        filepath = home + "/.config/gocart/gocart.yaml"
+        import codecs
+        with codecs.open(filepath, encoding='utf-8', mode='r') as readFile:
+            content = readFile.read().replace("group_id: XXXX", f"group_id: {group_id}")
+        with codecs.open(filepath, encoding='utf-8', mode='w') as writeFile:
+            writeFile.write(content)
 
     ## START LOGGING ##
     startTime = times.get_now_sql_datetime()
@@ -68,38 +81,11 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
-    # set options interactively if user requests
-    if "interactiveFlag" in a and a["interactiveFlag"]:
-
-        # load previous settings
-        moduleDirectory = os.path.dirname(__file__) + "/resources"
-        pathToPickleFile = "%(moduleDirectory)s/previousSettings.p" % locals()
-        try:
-            with open(pathToPickleFile):
-                pass
-            previousSettingsExist = True
-        except:
-            previousSettingsExist = False
-        previousSettings = {}
-        if previousSettingsExist:
-            previousSettings = pickle.load(open(pathToPickleFile, "rb"))
-
-        # x-raw-input
-        # x-boolean-raw-input
-        # x-raw-input-with-default-value-from-previous-settings
-
-        # save the most recently used requests
-        pickleMeObjects = []
-        pickleMe = {}
-        theseLocals = locals()
-        for k in pickleMeObjects:
-            pickleMe[k] = theseLocals[k]
-        pickle.dump(pickleMe, open(pathToPickleFile, "wb"))
-
     if a["init"]:
         from os.path import expanduser
         home = expanduser("~")
         filepath = home + "/.config/gocart/gocart.yaml"
+
         try:
             cmd = """open %(filepath)s""" % locals()
             p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
@@ -113,10 +99,33 @@ def main(arguments=None):
         return
 
     # CALL FUNCTIONS/OBJECTS
+    if a['listen']:
+        from gcn_kafka import Consumer
+        from confluent_kafka import TopicPartition
+        from gocart.parsers import lvk
+        import datetime
+        topic = 'igwn.gwalert'
+        config = {'group.id': settings["gcn-kafka"]["group_id"],
+                  'auto.offset.reset': 'earliest',
+                  'enable.auto.commit': False}
 
-    if "dbConn" in locals() and dbConn:
-        dbConn.commit()
-        dbConn.close()
+        consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
+                            client_secret=settings['gcn-kafka']['client_secret'])
+        consumer.subscribe([topic])
+
+        stop = False
+        while not stop:
+            for message in consumer.consume():
+
+                parser = lvk(
+                    log=log,
+                    record=message.value(),
+                    settings=settings
+                ).parse()
+
+                if a["testFlag"]:
+                    stop = True
+
     ## FINISH LOGGING ##
     endTime = times.get_now_sql_datetime()
     runningTime = times.calculate_time_difference(startTime, endTime)

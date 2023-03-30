@@ -49,7 +49,7 @@ class test_aitoff(unittest.TestCase):
         from gocart.convert import aitoff
         converter = aitoff(
             log=log,
-            mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+            mapPath=pathToOutputDir + "/bayestar.multiorder.03.fits",
             outputFolder=pathToOutputDir,
             settings=settings
         )
