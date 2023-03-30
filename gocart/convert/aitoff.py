@@ -113,6 +113,8 @@ class aitoff(object):
         long = np.deg2rad(mapDF["RASHIFTED"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
         lat = np.deg2rad(mapDF["DEC"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
 
+        print(long.min(), long.max())
+
         # MATPLOTLIB IS DOING THE PROJECTION
         cmap = get_cmap("hot_r")
         fig = plt.figure()
