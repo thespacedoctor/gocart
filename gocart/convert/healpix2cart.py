@@ -66,7 +66,6 @@ class healpix2cart(object):
             - ``wcs`` -- an astropy wcs object
             - ``mapDF`` -- the map converted cartesian format and recorded in a pandas dataframe.
             - ``header`` -- the map header
-            -
 
         **Usage:**
 

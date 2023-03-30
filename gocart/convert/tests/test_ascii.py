@@ -45,23 +45,23 @@ if not os.path.exists(pathToOutputDir):
 # xt-setup-unit-testing-files-and-folders
 # xt-utkit-refresh-database
 
-class test_flatten_healpix_map(unittest.TestCase):
+class test_ascii(unittest.TestCase):
 
-    def test_flatten_healpix_map_function(self):
+    def test_ascii_function(self):
 
-        from gocart.commonutils import flatten_healpix_map
-        hdus = flatten_healpix_map(
+        from gocart.convert import ascii
+        c = ascii(
             log=log,
             mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
-            nside=64
+            settings=settings
         )
-        hdus.writeto(pathToOutputDir + "/bayestar.nside64.fits", checksum=True)
+        asciiContent = c.convert(outputFilepath=pathToOutputDir + "skymap.csv")
 
-    def test_flatten_healpix_map_function_exception(self):
+    def test_ascii_function_exception(self):
 
-        from gocart import flatten_healpix_map
+        from gocart.convert import ascii
         try:
-            this = flatten_healpix_map(
+            this = ascii(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"

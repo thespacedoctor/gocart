@@ -16,124 +16,57 @@ import os
 os.environ['TERM'] = 'vt100'
 
 
-# OR YOU CAN REMOVE THE CLASS BELOW AND ADD A WORKER FUNCTION ... SNIPPET TRIGGER BELOW
-# xt-worker-def
-
-class flatten_healpix_map(object):
-    """
-    *The worker class for the flatten_healpix_map module*
+def flatten_healpix_map(
+        log,
+        mapPath,
+        nside=64):
+    """flatten a multiorder healpix map to a specific nside*
 
     **Key Arguments:**
         - ``log`` -- logger
         - ``mapPath`` -- path to the multiorder map.
-        - ``settings`` -- the settings dictionary
+        - ``nside`` -- the nside index to flatten the map to. Default *64* (~0.9 deg2 pixels)
 
-    **Usage:**
-
-    To setup your logger, settings and database connections, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_). 
-
-    To initiate a flatten_healpix_map object, use the following:
+    **Return:**
+        - ``hdus`` -- the flatten map HDUs
+        - ``table`` -- the astropy table of the map
 
     ```eval_rst
     .. todo::
 
-        - add usage info
         - create a sublime snippet for usage
-        - create cl-util for this class
-        - add a tutorial about ``flatten_healpix_map`` to documentation
-        - create a blog post about what ``flatten_healpix_map`` does
+        - add a tutorial about ``subtract_calibrations`` to documentation
     ```
 
     ```python
     from gocart.commonutils import flatten_healpix_map
-    f = flatten_healpix_map(
-        log=self.log,
-        settings=self.settings,
-        mapPath=self.mapPath
+    hdus = flatten_healpix_map(
+        log=log,
+        mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+        nside=64
     )
-    hdus = f.flatten()
+    hdus.writeto('/tmp/filename.fits', checksum=True)
     ```
-
     """
-    # Initialisation
-    # 1. @flagged: what are the unique attrributes for each object? Add them
-    # to __init__
+    log.debug('starting the ``flatten_healpix_map`` function')
 
-    def __init__(
-            self,
-            log,
-            mapPath,
-            settings=False,
+    import astropy_healpix as ah
+    from astropy.io import fits
+    from ligo.skymap.bayestar import rasterize
+    from ligo.skymap.io import read_sky_map, write_sky_map
+    from astropy.table import Table
+    import tempfile
 
-    ):
-        self.log = log
-        log.debug("instansiating a new 'flatten_healpix_map' object")
-        self.settings = settings
-        self.mapPath = mapPath
+    hdus = fits.open(mapPath)
+    order = ah.nside_to_level(nside)
+    ordering = hdus[1].header['ORDERING']
+    if ordering != 'NUNIQ':
+        log.info("Map is already flattened")
+    table = read_sky_map(hdus, moc=True)
+    table = rasterize(table, order=order)
+    with tempfile.NamedTemporaryFile(suffix='.fits') as f:
+        write_sky_map(f.name, table, nest=True)
+        hdus = fits.open(f.name)
 
-        # xt-self-arg-tmpx
-
-        # 2. @flagged: what are the default attrributes each object could have? Add them to variable attribute set here
-        # Variable Data Atrributes
-
-        # 3. @flagged: what variable attrributes need overriden in any baseclass(es) used
-        # Override Variable Data Atrributes
-
-        # Initial Actions
-
-        return None
-
-    # 4. @flagged: what actions does each object have to be able to perform? Add them here
-    # Method Attributes
-    def flatten(
-            self,
-            nside=64):
-        """
-        *flatten the multi-order map to nsides*
-
-        **Return:**
-            - ``flatten_healpix_map``
-
-        **Usage:**
-
-        ```eval_rst
-        .. todo::
-
-            - add usage info
-            - create a sublime snippet for usage
-            - create cl-util for this method
-            - update the package tutorial if needed
-        ```
-
-        ```python
-        usage code 
-        ```
-        """
-        self.log.debug('starting the ``get`` method')
-
-        import astropy_healpix as ah
-        from astropy.io import fits
-        from ligo.skymap.bayestar import rasterize
-        from ligo.skymap.io import read_sky_map, write_sky_map
-        from astropy.table import Table
-        import tempfile
-
-        hdus = fits.open(self.mapPath)
-        order = ah.nside_to_level(nside)
-        ordering = hdus[1].header['ORDERING']
-        if ordering != 'NUNIQ':
-            self.log.info("Map is already flattened")
-        table = read_sky_map(hdus, moc=True)
-        table = rasterize(table, order=order)
-        with tempfile.NamedTemporaryFile(suffix='.fits') as f:
-            write_sky_map(f.name, table, nest=True)
-            hdus = fits.open(f.name)
-
-        self.log.debug('completed the ``get`` method')
-        return hdus
-
-    # xt-class-method
-
-    # 5. @flagged: what actions of the base class(es) need ammending? ammend them here
-    # Override Method Attributes
-    # method-override-tmpx
+    log.debug('completed the ``flatten_healpix_map`` function')
+    return hdus, table
