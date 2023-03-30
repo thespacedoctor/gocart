@@ -192,7 +192,7 @@ class aitoff(object):
             mapDF["CUMPROB"] = mapDF["CUMPROB"] * 100. * mapDF["PROB"].sum()
             mapDF.sort_index(inplace=True)
             contours = mapDF["CUMPROB"].values.reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
-#
+
             line_c = ax.contour(long, lat,
                                 contours, levels=[0, 50, 90], colors=['r', 'g', 'b'], linewidths=0.5, zorder=2)
             this = ax.clabel(line_c, inline=True, fontsize=6, colors=['#93a1a1'], fmt='{:.0f} '.format)
