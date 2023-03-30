@@ -57,7 +57,7 @@ class test_aitoff(unittest.TestCase):
 
     def test_aitoff_function_exception(self):
 
-        from gocart import aitoff
+        from gocart.convert import aitoff
         try:
             this = aitoff(
                 log=log,

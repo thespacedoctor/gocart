@@ -66,14 +66,13 @@ class test_healpix2cart(unittest.TestCase):
 
     def test_healpix2cart_function_exception(self):
 
-        from gocart import healpix2cart
+        from gocart.convert import healpix2cart
         try:
             this = healpix2cart(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"
             )
-            this.get()
             assert False
         except Exception as e:
             assert True

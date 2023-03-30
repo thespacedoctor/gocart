@@ -50,7 +50,7 @@ class test_flatten_healpix_map(unittest.TestCase):
     def test_flatten_healpix_map_function(self):
 
         from gocart.commonutils import flatten_healpix_map
-        hdus = flatten_healpix_map(
+        hdus, table = flatten_healpix_map(
             log=log,
             mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
             nside=64
@@ -59,14 +59,13 @@ class test_flatten_healpix_map(unittest.TestCase):
 
     def test_flatten_healpix_map_function_exception(self):
 
-        from gocart import flatten_healpix_map
+        from gocart.commonutils import flatten_healpix_map
         try:
-            this = flatten_healpix_map(
+            hdus, table = flatten_healpix_map(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"
             )
-            this.get()
             assert False
         except Exception as e:
             assert True

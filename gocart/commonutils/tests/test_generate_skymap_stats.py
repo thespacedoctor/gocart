@@ -58,7 +58,7 @@ class test_generate_skymap_stats(unittest.TestCase):
 
     def test_generate_skymap_stats_function_exception(self):
 
-        from gocart import generate_skymap_stats
+        from gocart.commonutils import generate_skymap_stats
         try:
             this = generate_skymap_stats(
                 log=log,

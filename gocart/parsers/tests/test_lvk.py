@@ -74,7 +74,7 @@ class test_lvk(unittest.TestCase):
 
     def test_lvk_function_exception(self):
 
-        from gocart import lvk
+        from gocart.parsers import lvk
         try:
             this = lvk(
                 log=log,
