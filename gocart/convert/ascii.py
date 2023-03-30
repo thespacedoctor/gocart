@@ -28,28 +28,20 @@ class ascii(object):
 
     **Usage:**
 
-    To setup your logger, settings and database connections, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_). 
+    To setup your logger and settings, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_).
 
-    To initiate a ascii object, use the following:
-
-    ```eval_rst
-    .. todo::
-
-        - add usage info
-        - create a sublime snippet for usage
-        - create cl-util for this class
-        - add a tutorial about ``ascii`` to documentation
-        - create a blog post about what ``ascii`` does
-    ```
+    To convert a healpix map to ascii, run:
 
     ```python
-    usage code 
+    from gocart.convert import ascii
+    c = ascii(
+        log=log,
+        mapPath="/path/to/bayestar.multiorder.fits",
+        settings=settings
+    )
+    asciiContent = c.convert(outputFilepath="/path/to/skymap.csv")
     ```
-
     """
-    # Initialisation
-    # 1. @flagged: what are the unique attrributes for each object? Add them
-    # to __init__
 
     def __init__(
             self,
@@ -62,14 +54,13 @@ class ascii(object):
         log.debug("instansiating a new 'ascii' object")
         self.settings = settings
         self.mapPath = mapPath
+        self.nside = 64
 
         self.hdus, self.table = flatten_healpix_map(
             log=log,
             mapPath=self.mapPath,
-            nside=64
+            nside=self.nside
         )
-
-        # hdus.writeto('/tmp/filename.fits', checksum=True)
 
         return None
 
@@ -77,34 +68,44 @@ class ascii(object):
             self,
             outputFilepath=False):
         """
-        *get the ascii object*
+        *Convert the healpix map to ascii format and optionally save the ascii map to file*
 
         **Key Arguments:**
             - ``outputFilepath`` -- optionally write content to file. Default *False*
 
         **Return:**
-            - ``ascii``
-
-        **Usage:**
-
-        ```eval_rst
-        .. todo::
-
-            - add usage info
-            - create a sublime snippet for usage
-            - create cl-util for this method
-            - update the package tutorial if needed
-        ```
-
-        ```python
-        usage code 
-        ```
+            - ``ascii`` -- the CSV version of the healpix file (nside=64)
         """
         self.log.debug('starting the ``get`` method')
 
+        import astropy_healpix as ah
+        from astropy.coordinates import SkyCoord
+
         tableData = self.table.to_pandas()
 
-        asciiContent = tableData.to_csv(index=False)
+        # CREATE RA AND DEC COLUMNS
+        ra, dec = ah.healpix_to_lonlat(tableData.index, 64, order='nested')
+        tableData["RA"] = ra.deg
+        tableData["DEC"] = dec.deg
+
+        # ALSO GLON GLAT COLUMNS
+        galacticCoords = SkyCoord(ra.deg, dec.deg, frame='icrs', unit='deg').galactic
+        tableData["GLON"] = galacticCoords.l.degree
+        tableData["GLAT"] = galacticCoords.b.degree
+
+        # DROP COLUMNS
+        try:
+            tableData.drop(columns=['DISTNORM'], inplace=True)
+        except:
+            pass
+
+        # CREATE HEADER FOR FILE
+        header = f"# EVENT:{self.table.meta['objid']}\n"
+        header += f"# NSIDE:{self.nside}\n"
+
+        tableData.index.names = ['IPIX']
+        asciiContent = tableData.to_csv(index=True)
+        asciiContent = header + asciiContent
 
         if outputFilepath:
             import codecs
@@ -113,9 +114,3 @@ class ascii(object):
 
         self.log.debug('completed the ``get`` method')
         return asciiContent
-
-    # xt-class-method
-
-    # 5. @flagged: what actions of the base class(es) need ammending? ammend them here
-    # Override Method Attributes
-    # method-override-tmpx
