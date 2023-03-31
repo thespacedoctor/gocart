@@ -106,14 +106,18 @@ class aitoff(object):
         )
         wcs, mapDF, header = converter.convert()
 
+        xsize = mapDF["PIXEL_X"].max() - mapDF["PIXEL_X"].min() + 1
+        ysize = mapDF["PIXEL_Y"].max() - mapDF["PIXEL_Y"].min() + 1
+
         # RA RANGES FROM 0-360 ... NEED TO FLIP 360-0, AND THEN SHIFT BY 180 TO MATCH MATPLOTLIB FRAME
         mapDF = mapDF.iloc[::-1].reset_index()
         mapDF["RASHIFTED"] = -mapDF["RA"] + 180
-        data = mapDF["PROB"].values.reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
-        long = np.deg2rad(mapDF["RASHIFTED"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
-        lat = np.deg2rad(mapDF["DEC"].values).reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
+        data = mapDF["PROB"].values.reshape((ysize, xsize))
+        long = np.deg2rad(mapDF["RASHIFTED"].values).reshape((ysize, xsize))
+        lat = np.deg2rad(mapDF["DEC"].values).reshape((ysize, xsize))
 
-        print(long.min(), long.max())
+        # long = mapDF["RASHIFTED"].values.reshape((ysize, xsize))
+        # lat = mapDF["DEC"].values.reshape((ysize, xsize))
 
         # MATPLOTLIB IS DOING THE PROJECTION
         cmap = get_cmap("hot_r")
@@ -125,7 +129,7 @@ class aitoff(object):
         # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
         std = data.std()
         mean = data.mean()
-        # image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
+        image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
 
         # GRATICULE
         ax.set_longitude_grid(30)
@@ -157,15 +161,15 @@ class aitoff(object):
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
             sun = get_sun(t).icrs
-            print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
-            print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
+            # print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
+            # print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
             sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360
 
             sun.ra.radian = np.deg2rad(sun.ra.degree)
-            print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
-            print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
+            # print(f"SUN: {sun.ra.degree:.3f}, {sun.dec.degree:.3f}")
+            # print(f"SUN: {sun.ra.radian:.3f}, {sun.dec.radian:.3f}")
 
             # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
             nlons = 1441
@@ -193,7 +197,7 @@ class aitoff(object):
             mapDF["CUMPROB"] = np.cumsum(mapDF['PROB'])
             mapDF["CUMPROB"] = mapDF["CUMPROB"] * 100. * mapDF["PROB"].sum()
             mapDF.sort_index(inplace=True)
-            contours = mapDF["CUMPROB"].values.reshape((mapDF["PIXEL_Y"].max() + 1, mapDF["PIXEL_X"].max() + 1))
+            contours = mapDF["CUMPROB"].values.reshape((ysize, xsize))
 
             line_c = ax.contour(long, lat,
                                 contours, levels=[0, 50, 90], colors=['r', 'g', 'b'], linewidths=0.5, zorder=2)

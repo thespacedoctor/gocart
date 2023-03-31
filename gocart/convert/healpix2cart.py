@@ -177,6 +177,7 @@ def create_wcs_and_pixels(log):
     # MUST REFLECT THIS
     wcs.wcs.crpix[1] -= wcs.wcs.crval[1] / wcs.wcs.cdelt[1]
     wcs.wcs.crval[1] = 0
+    wcs.wcs.crval[0] = raRange / 2
 
     # SET COORDINATE TYPE TO CARTESIAN
     wcs.wcs.ctype = ["RA---CAR", "DEC--CAR"]
