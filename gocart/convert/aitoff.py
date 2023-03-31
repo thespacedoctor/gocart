@@ -129,7 +129,7 @@ class aitoff(object):
         # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
         std = data.std()
         mean = data.mean()
-        image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
+        #image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
 
         # GRATICULE
         ax.set_longitude_grid(30)
@@ -199,9 +199,13 @@ class aitoff(object):
             mapDF.sort_index(inplace=True)
             contours = mapDF["CUMPROB"].values.reshape((ysize, xsize))
 
-            line_c = ax.contour(long, lat,
-                                contours, levels=[0, 50, 90], colors=['r', 'g', 'b'], linewidths=0.5, zorder=2)
-            this = ax.clabel(line_c, inline=True, fontsize=6, colors=['#93a1a1'], fmt='{:.0f} '.format)
+            line_c = ax.contourf(long, lat,
+                                 contours, levels=[0, 90], colors=['r'], linewidths=0.5, zorder=2)
+            # line_c = ax.contourf(long, lat,
+            #                      contours, levels=[0, 50], colors=['g'], linewidths=0.5, zorder=3)
+            # line_c = ax.contourf(long, lat,
+            #                      contours, levels=[0, 10], colors=['b'], linewidths=0.5, zorder=4)
+            # this = ax.clabel(line_c, inline=True, fontsize=6, colors=['#93a1a1'], fmt='{:.0f} '.format)
 
         ax.tick_params(axis='x', labelsize=12)
         ax.tick_params(axis='y', labelsize=12)

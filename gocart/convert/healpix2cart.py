@@ -162,7 +162,7 @@ def create_wcs_and_pixels(log):
     wcs = WCS(naxis=2)
 
     # DETERMINE THE PIXEL GRID X,Y RANGES
-    pixelSizeDeg = 0.2
+    pixelSizeDeg = 1.
     raRange = 360
     decRange = 180
     xRange = int(raRange / pixelSizeDeg)
