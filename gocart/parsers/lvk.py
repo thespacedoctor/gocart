@@ -155,7 +155,8 @@ class lvk(object):
                 log=self.log,
                 mapPath=fitsPath,
                 outputFolder=alertDir,
-                settings=self.settings
+                settings=self.settings,
+                meta=meta
             )
             c.convert()
 

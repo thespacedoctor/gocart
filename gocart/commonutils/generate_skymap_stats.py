@@ -66,11 +66,14 @@ def generate_skymap_stats(
     area90 = tableData.loc[mask, 'AREA'].sum()
     mask = (tableData["CUMPROB"] < 0.5)
     area50 = tableData.loc[mask, 'AREA'].sum()
+    mask = (tableData["CUMPROB"] < 0.1)
+    area10 = tableData.loc[mask, 'AREA'].sum()
 
     area90 = float(f'{area90:.3f}')
     area50 = float(f'{area50:.3f}')
+    area10 = float(f'{area10:.3f}')
 
-    extras = {"area90": area90, "area50": area50}
+    extras = {"area90": area90, "area50": area50, "area10": area10}
 
     log.debug('completed the ``generate_skymap_stats`` function')
     return extras
