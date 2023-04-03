@@ -114,6 +114,8 @@ class lvk(object):
             print(f'EVENT: {self.record["superevent_id"]} detected at {self.record["event"]["time"].replace("Z","")} UTC')
             print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC (+{timeDelta:.2f} mins)')
             print(f'FAR: {far}')
+            for k, v in self.record['event']['classification'].items():
+                self.record['event']['classification'][k] = float(f'{v:.2f}')
             print(f"CLASSIFICATION: {self.record['event']['classification']}")
             print(f"PROPERTIES: {self.record['event']['properties']})\n\n")
         else:

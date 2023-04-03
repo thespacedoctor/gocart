@@ -217,7 +217,7 @@ class aitoff(object):
             for c, l in zip(colors, levels):
                 z += 1
                 ax.contourf(long, lat,
-                            contours, levels=[0, l], colors=c, zorder=z)
+                            contours, levels=[0, l], colors=c, zorder=z, alpha=0.8)
                 if "EXTRA" in self.meta and f"area{l}" in self.meta["EXTRA"]:
                     area = self.meta["EXTRA"][f"area{l}"]
                     label = f"{l}%: {area:.1f} deg$^2$"
@@ -250,11 +250,11 @@ class aitoff(object):
 
             data += "\n"
             for k, v in self.meta['ALERT']['event']['classification'].items():
-                data += f"{k}: {v}\n"
+                data += f"{k}: {v:.2f}\n"
 
             data += "\n"
             for k, v in self.meta['ALERT']['event']['properties'].items():
-                data += f"{k}: {v}\n"
+                data += f"{k}: {v:.2f}\n"
 
             plt.text(3.42, 0.2, data, ha='left', va='top', fontsize=5, linespacing=1.8)
 
@@ -264,6 +264,7 @@ class aitoff(object):
         ax.tick_params(axis='y', labelsize=12)
         plt.grid(True)
         plt.legend(handles=handles, loc='upper left', scatterpoints=1, bbox_to_anchor=(1.01, 1), fontsize=6)
+        ax.xaxis.zorder = 40
 
         plt.savefig(self.outputFolder + "/skymap.png", bbox_inches='tight', dpi=300)
 
