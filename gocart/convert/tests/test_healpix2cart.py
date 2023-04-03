@@ -38,50 +38,41 @@ except:
 shutil.copytree(pathToInputDir, pathToOutputDir)
 
 # Recursively create missing directories
-if not os.path.exists(pathToOutputDir + "/lvk_events/"):
-    os.makedirs(pathToOutputDir + "/lvk_events/")
-
-testAlerts = [
-    'MS181101ab-earlywarning.json',
-    'MS181101ab-initial.json',
-    'MS181101ab-preliminary.json',
-    'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
-]
-
-
-settings["lvk"]["download_dir"] = pathToOutputDir + "/lvk_events/"
+if not os.path.exists(pathToOutputDir):
+    os.makedirs(pathToOutputDir)
 
 
 # xt-setup-unit-testing-files-and-folders
 # xt-utkit-refresh-database
 
-class test_lvk(unittest.TestCase):
+class test_healpix2cart(unittest.TestCase):
 
-    def test_lvk_function(self):
+    def test_create_wcs_and_pixels(self):
 
-        for a in testAlerts:
-            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
-            with open(f'{pathToInputDir}/{a}', 'r') as f:
-                record = f.read()
+        from gocart.convert import create_wcs_and_pixels
+        wcs, mapDF = create_wcs_and_pixels(log=log)
+        from tabulate import tabulate
+        print(tabulate(mapDF.head(100), headers='keys', tablefmt='psql'))
 
-            from gocart.parsers import lvk
-            parser = lvk(
-                log=log,
-                record=record,
-                settings=settings
-            ).parse()
+    def test_healpix2cart_function(self):
 
-    def test_lvk_function_exception(self):
+        from gocart.convert import healpix2cart
+        converter = healpix2cart(
+            log=log,
+            mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+            settings=settings
+        )
+        converter.convert()
 
-        from gocart.parsers import lvk
+    def test_healpix2cart_function_exception(self):
+
+        from gocart.convert import healpix2cart
         try:
-            this = lvk(
+            this = healpix2cart(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"
             )
-            this.get()
             assert False
         except Exception as e:
             assert True

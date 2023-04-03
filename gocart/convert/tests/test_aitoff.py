@@ -38,45 +38,28 @@ except:
 shutil.copytree(pathToInputDir, pathToOutputDir)
 
 # Recursively create missing directories
-if not os.path.exists(pathToOutputDir + "/lvk_events/"):
-    os.makedirs(pathToOutputDir + "/lvk_events/")
-
-testAlerts = [
-    'MS181101ab-earlywarning.json',
-    'MS181101ab-initial.json',
-    'MS181101ab-preliminary.json',
-    'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
-]
+if not os.path.exists(pathToOutputDir):
+    os.makedirs(pathToOutputDir)
 
 
-settings["lvk"]["download_dir"] = pathToOutputDir + "/lvk_events/"
+class test_aitoff(unittest.TestCase):
 
+    def test_aitoff_function(self):
 
-# xt-setup-unit-testing-files-and-folders
-# xt-utkit-refresh-database
+        from gocart.convert import aitoff
+        converter = aitoff(
+            log=log,
+            mapPath=pathToOutputDir + "/bayestar.multiorder.03.fits",
+            outputFolder=pathToOutputDir,
+            settings=settings
+        )
+        converter.convert()
 
-class test_lvk(unittest.TestCase):
+    def test_aitoff_function_exception(self):
 
-    def test_lvk_function(self):
-
-        for a in testAlerts:
-            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
-            with open(f'{pathToInputDir}/{a}', 'r') as f:
-                record = f.read()
-
-            from gocart.parsers import lvk
-            parser = lvk(
-                log=log,
-                record=record,
-                settings=settings
-            ).parse()
-
-    def test_lvk_function_exception(self):
-
-        from gocart.parsers import lvk
+        from gocart.convert import aitoff
         try:
-            this = lvk(
+            this = aitoff(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"

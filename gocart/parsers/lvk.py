@@ -9,6 +9,8 @@
 :Date Created:
     March 19, 2023
 """
+from gocart.commonutils import generate_skymap_stats
+from gocart.convert import ascii
 from fundamentals import tools
 from builtins import object
 import sys
@@ -16,12 +18,9 @@ import os
 os.environ['TERM'] = 'vt100'
 
 
-# OR YOU CAN REMOVE THE CLASS BELOW AND ADD A WORKER FUNCTION ... SNIPPET TRIGGER BELOW
-# xt-worker-def
-
 class lvk(object):
     """
-    *The worker class for the lvk module*
+    *The LVK event parser*
 
     **Key Arguments:**
         - ``log`` -- logger
@@ -30,28 +29,20 @@ class lvk(object):
 
     **Usage:**
 
-    To setup your logger, settings and database connections, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_). 
+    To setup your logger and settings, please use the ``fundamentals`` package (`see tutorial here <http://fundamentals.readthedocs.io/en/latest/#tutorial>`_).
 
-    To initiate a lvk object, use the following:
-
-    ```eval_rst
-    .. todo::
-
-        - add usage info
-        - create a sublime snippet for usage
-        - create cl-util for this class
-        - add a tutorial about ``lvk`` to documentation
-        - create a blog post about what ``lvk`` does
-    ```
+    To parse LVK kafka alerts, use the following:
 
     ```python
-    usage code 
+    from gocart.parsers import lvk
+    parser = lvk(
+        log=log,
+        record=record,
+        settings=settings
+    ).parse()
     ```
 
     """
-    # Initialisation
-    # 1. @flagged: what are the unique attrributes for each object? Add them
-    # to __init__
 
     def __init__(
             self,
@@ -78,6 +69,11 @@ class lvk(object):
         # WHERE TO DOWNLOAD MAPS TO
         if "download_dir" in self.settings["lvk"] and self.settings["lvk"]["download_dir"]:
             self.download_dir = self.settings["lvk"]["download_dir"]
+            # MAKE RELATIVE HOME PATH ABSOLUTE
+            from os.path import expanduser
+            home = expanduser("~")
+            if self.download_dir == "~":
+                self.download_dir = self.download_dir.replace("~", home)
         else:
             self.download_dir = "."
 
@@ -85,25 +81,7 @@ class lvk(object):
 
     def parse(self):
         """
-        *parse the lvk events*
-
-        **Return:**
-            - ``lvk``
-
-        **Usage:**
-
-        ```eval_rst
-        .. todo::
-
-            - add usage info
-            - create a sublime snippet for usage
-            - create cl-util for this method
-            - update the package tutorial if needed
-        ```
-
-        ```python
-        usage code 
-        ```
+        *parse the lvk events and write meta data and maps to file
         """
         self.log.debug('starting the ``parse`` method')
 
@@ -120,12 +98,30 @@ class lvk(object):
 
         # ONCE WE HAVE DECIDED TO SAVE THE EVENT/ALERT
         # RECURSIVELY CREATE MISSING DIRECTORIES
-        alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace("Z", "")
+        alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace(" ", "").replace("Z", "")
         alertDir = self.download_dir + "/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
         if not os.path.exists(alertDir):
             os.makedirs(alertDir)
 
+        if "event" in self.record and self.record["event"]:
+            timeDelta = (Time(self.record["time_created"], scale='utc') - Time(self.record["event"]["time"], scale='utc')).to_value(unit='min')
+            far = 1 / (float(self.record['event']['far']) * 60. * 60. * 24.)
+            if far > 1000:
+                far /= 365.
+                far = f"1 per {far:0.1f} yrs"
+            else:
+                far = f"1 per {far:0.1f} days"
+            print(f'EVENT: {self.record["superevent_id"]} detected at {self.record["event"]["time"].replace("Z","")} UTC')
+            print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC (+{timeDelta:.2f} mins)')
+            print(f'FAR: {far}')
+            print(f"CLASSIFICATION: {self.record['event']['classification']}")
+            print(f"PROPERTIES: {self.record['event']['properties']})\n\n")
+        else:
+            print(f'EVENT: {self.record["superevent_id"]}')
+            print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC\n\n')
+
         # PARSE SKY MAP
+        header, extras, fitsPath = {}, {}, None
         if self.record.get('event', {}):
             skymap_str = self.record.get('event', {}).pop('skymap')
             if skymap_str:
@@ -133,38 +129,43 @@ class lvk(object):
                 skymap_bytes = b64decode(skymap_str)
                 skymap = Table.read(BytesIO(skymap_bytes))
 
-                level, ipix = ah.uniq_to_level_ipix(
-                    skymap[np.argmax(skymap['PROBDENSITY'])]['UNIQ']
-                )
-                ra, dec = ah.healpix_to_lonlat(ipix, ah.level_to_nside(level),
-                                               order='nested')
-                print(f'Most probable sky location (RA, Dec) = ({ra.deg}, {dec.deg})')
-
-                # Print some information from FITS header
-                print(f'Distance = {skymap.meta["DISTMEAN"]} +/- {skymap.meta["DISTSTD"]}')
-
                 localisation = skymap.meta["CREATOR"].lower()
 
-                with open(f"{alertDir}/{localisation}.multiorder.fits", "wb") as f:
+                fitsPath = f"{alertDir}/{localisation}.multiorder.fits"
+                with open(fitsPath, "wb") as f:
                     f.write(skymap_bytes)
 
-                header = {k: v for k, v in skymap.meta.items()}
+                header = {k: v for k, v in skymap.meta.items() if k != "HISTORY"}
 
-                # WRITE ALERT TO YAML FILE
-                with open(alertDir + "/header.yaml", 'w') as stream:
-                    yaml.dump(header, stream, default_flow_style=False)
+                # GENERATE SOME EXTRA STATS
+                extras = generate_skymap_stats(
+                    log=self.log,
+                    skymap=skymap,
+                )
 
-        # WRITE ALERT TO YAML FILE
-        with open(alertDir + "/alert.yaml", 'w') as stream:
-            yaml.dump(self.record, stream, default_flow_style=False)
+        # MERGE HEADER AND ALERT INTO ONE FILE
+        meta = {"HEADER": header, "ALERT": self.record, "EXTRA": extras}
 
-            # SAVE THE FITS MAP
+        with open(alertDir + "/meta.yaml", 'w') as stream:
+            yaml.dump(meta, stream, default_flow_style=False)
+
+        if fitsPath:
+            c = ascii(
+                log=self.log,
+                mapPath=fitsPath,
+                settings=self.settings
+            )
+            asciiContent = c.convert(outputFilepath=alertDir + "/skymap.csv")
+
+            from gocart.convert import aitoff
+            c = aitoff(
+                log=self.log,
+                mapPath=fitsPath,
+                outputFolder=alertDir,
+                settings=self.settings,
+                meta=meta
+            )
+            c.convert()
 
         self.log.debug('completed the ``parse`` method')
         return lvk
-
-    # xt-class-method
-
-    # 5. @flagged: what actions of the base class(es) need ammending? ammend them here
-    # Override Method Attributes
-    # method-override-tmpx

@@ -38,45 +38,29 @@ except:
 shutil.copytree(pathToInputDir, pathToOutputDir)
 
 # Recursively create missing directories
-if not os.path.exists(pathToOutputDir + "/lvk_events/"):
-    os.makedirs(pathToOutputDir + "/lvk_events/")
-
-testAlerts = [
-    'MS181101ab-earlywarning.json',
-    'MS181101ab-initial.json',
-    'MS181101ab-preliminary.json',
-    'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
-]
-
-
-settings["lvk"]["download_dir"] = pathToOutputDir + "/lvk_events/"
+if not os.path.exists(pathToOutputDir):
+    os.makedirs(pathToOutputDir)
 
 
 # xt-setup-unit-testing-files-and-folders
 # xt-utkit-refresh-database
 
-class test_lvk(unittest.TestCase):
+class test_generate_skymap_stats(unittest.TestCase):
 
-    def test_lvk_function(self):
+    def test_generate_skymap_stats_function(self):
 
-        for a in testAlerts:
-            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
-            with open(f'{pathToInputDir}/{a}', 'r') as f:
-                record = f.read()
+        from gocart.commonutils import generate_skymap_stats
+        extras = generate_skymap_stats(
+            log=log,
+            skymap=pathToOutputDir + "/bayestar.multiorder.fits",
+        )
+        print(extras)
 
-            from gocart.parsers import lvk
-            parser = lvk(
-                log=log,
-                record=record,
-                settings=settings
-            ).parse()
+    def test_generate_skymap_stats_function_exception(self):
 
-    def test_lvk_function_exception(self):
-
-        from gocart.parsers import lvk
+        from gocart.commonutils import generate_skymap_stats
         try:
-            this = lvk(
+            this = generate_skymap_stats(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"

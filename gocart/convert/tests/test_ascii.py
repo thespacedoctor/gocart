@@ -38,45 +38,30 @@ except:
 shutil.copytree(pathToInputDir, pathToOutputDir)
 
 # Recursively create missing directories
-if not os.path.exists(pathToOutputDir + "/lvk_events/"):
-    os.makedirs(pathToOutputDir + "/lvk_events/")
-
-testAlerts = [
-    'MS181101ab-earlywarning.json',
-    'MS181101ab-initial.json',
-    'MS181101ab-preliminary.json',
-    'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
-]
-
-
-settings["lvk"]["download_dir"] = pathToOutputDir + "/lvk_events/"
+if not os.path.exists(pathToOutputDir):
+    os.makedirs(pathToOutputDir)
 
 
 # xt-setup-unit-testing-files-and-folders
 # xt-utkit-refresh-database
 
-class test_lvk(unittest.TestCase):
+class test_ascii(unittest.TestCase):
 
-    def test_lvk_function(self):
+    def test_ascii_function(self):
 
-        for a in testAlerts:
-            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
-            with open(f'{pathToInputDir}/{a}', 'r') as f:
-                record = f.read()
+        from gocart.convert import ascii
+        c = ascii(
+            log=log,
+            mapPath=pathToOutputDir + "/bayestar.multiorder.02.fits",
+            settings=settings
+        )
+        asciiContent = c.convert(outputFilepath=pathToOutputDir + "skymap.csv")
 
-            from gocart.parsers import lvk
-            parser = lvk(
-                log=log,
-                record=record,
-                settings=settings
-            ).parse()
+    def test_ascii_function_exception(self):
 
-    def test_lvk_function_exception(self):
-
-        from gocart.parsers import lvk
+        from gocart.convert import ascii
         try:
-            this = lvk(
+            this = ascii(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"

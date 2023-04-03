@@ -38,50 +38,34 @@ except:
 shutil.copytree(pathToInputDir, pathToOutputDir)
 
 # Recursively create missing directories
-if not os.path.exists(pathToOutputDir + "/lvk_events/"):
-    os.makedirs(pathToOutputDir + "/lvk_events/")
-
-testAlerts = [
-    'MS181101ab-earlywarning.json',
-    'MS181101ab-initial.json',
-    'MS181101ab-preliminary.json',
-    'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
-]
-
-
-settings["lvk"]["download_dir"] = pathToOutputDir + "/lvk_events/"
+if not os.path.exists(pathToOutputDir):
+    os.makedirs(pathToOutputDir)
 
 
 # xt-setup-unit-testing-files-and-folders
 # xt-utkit-refresh-database
 
-class test_lvk(unittest.TestCase):
+class test_flatten_healpix_map(unittest.TestCase):
 
-    def test_lvk_function(self):
+    def test_flatten_healpix_map_function(self):
 
-        for a in testAlerts:
-            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
-            with open(f'{pathToInputDir}/{a}', 'r') as f:
-                record = f.read()
+        from gocart.commonutils import flatten_healpix_map
+        hdus, table = flatten_healpix_map(
+            log=log,
+            mapPath=pathToOutputDir + "/bayestar.multiorder.fits",
+            nside=64
+        )
+        hdus.writeto(pathToOutputDir + "/bayestar.nside64.fits", checksum=True)
 
-            from gocart.parsers import lvk
-            parser = lvk(
-                log=log,
-                record=record,
-                settings=settings
-            ).parse()
+    def test_flatten_healpix_map_function_exception(self):
 
-    def test_lvk_function_exception(self):
-
-        from gocart.parsers import lvk
+        from gocart.commonutils import flatten_healpix_map
         try:
-            this = lvk(
+            hdus, table = flatten_healpix_map(
                 log=log,
                 settings=settings,
                 fakeKey="break the code"
             )
-            this.get()
             assert False
         except Exception as e:
             assert True
