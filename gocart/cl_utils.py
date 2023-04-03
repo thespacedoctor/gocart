@@ -5,10 +5,15 @@ Documentation for gocart can be found here: http://gocart.readthedocs.org
 
 Usage:
     gocart init
-    gocart [-t] listen [-s <pathToSettingsFile>]  
+    gocart echo <daysAgo> [-s <pathToSettingsFile>]
+    gocart [-t] listen [-s <pathToSettingsFile>]
+
 
 Options:
     init                                   setup the gocart settings file for the first time
+    echo <daysAgo>                         relisten to alerts from N <daysAgo> until now and then exit
+    listen                                 reconnect to kafka stream and listen from where you left off (or from now on if connectiong for the first time).
+
     -h, --help                             show this help message
     -v, --version                          show version
     -s, --settings <pathToSettingsFile>    the settings file
@@ -98,19 +103,20 @@ def main(arguments=None):
             pass
         return
 
+    topic = 'igwn.gwalert'
+
     # CALL FUNCTIONS/OBJECTS
     if a['listen']:
         from gcn_kafka import Consumer
         from confluent_kafka import TopicPartition
         from gocart.parsers import lvk
-        import datetime
-        topic = 'igwn.gwalert'
+
         config = {'group.id': settings["gcn-kafka"]["group_id"],
                   'auto.offset.reset': 'earliest',
                   'enable.auto.commit': False}
 
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
-                            client_secret=settings['gcn-kafka']['client_secret'])
+                            client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
         consumer.subscribe([topic])
 
         stop = False
@@ -125,6 +131,33 @@ def main(arguments=None):
 
                 if a["testFlag"]:
                     stop = True
+
+    if a['echo'] and a['daysAgo']:
+        # GET MESSAGES OCCURRING IN LAST N DAYS
+        from gcn_kafka import Consumer
+        from confluent_kafka import TopicPartition
+        from gocart.parsers import lvk
+        import datetime
+
+        consumer = Consumer(client_id=settings['gcn-kafka']['client_id'],
+                            client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
+
+        nowInMicrosec = int((datetime.datetime.now()).timestamp() * 1000)
+        timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=int(a['daysAgo']))).timestamp() * 1000)
+        timestamp2 = nowInMicrosec - 3600000  # now minus 3 mins
+
+        start = consumer.offsets_for_times(
+            [TopicPartition(topic, 0, timestamp1)])
+        end = consumer.offsets_for_times(
+            [TopicPartition(topic, 0, timestamp2)])
+
+        consumer.assign(start)
+        for message in consumer.consume(end[0].offset - start[0].offset):
+            parser = lvk(
+                log=log,
+                record=message.value(),
+                settings=settings
+            ).parse()
 
     ## FINISH LOGGING ##
     endTime = times.get_now_sql_datetime()

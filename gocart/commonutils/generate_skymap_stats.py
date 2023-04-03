@@ -75,5 +75,21 @@ def generate_skymap_stats(
 
     extras = {"area90": area90, "area50": area50, "area10": area10}
 
+    level, ipix = ah.uniq_to_level_ipix(
+        skymap[np.argmax(skymap['PROBDENSITY'])]['UNIQ']
+    )
+    ra, dec = ah.healpix_to_lonlat(ipix, ah.level_to_nside(level),
+                                   order='nested')
+
+    from astropy.coordinates import SkyCoord
+    galacticCoords = SkyCoord(ra, dec, frame='icrs').galactic
+    glon = galacticCoords.l.degree
+    glat = galacticCoords.b.degree
+
+    extras["central coordinate"] = {
+        "equatorial": f"{ra.deg:.6f} {dec.deg:.6f}",
+        "galactic": f"{glon:.6f} {glat:.6f}"
+    }
+
     log.debug('completed the ``generate_skymap_stats`` function')
     return extras

@@ -103,6 +103,23 @@ class lvk(object):
         if not os.path.exists(alertDir):
             os.makedirs(alertDir)
 
+        if "event" in self.record and self.record["event"]:
+            timeDelta = (Time(self.record["time_created"], scale='utc') - Time(self.record["event"]["time"], scale='utc')).to_value(unit='min')
+            far = 1 / (float(self.record['event']['far']) * 60. * 60. * 24.)
+            if far > 1000:
+                far /= 365.
+                far = f"1 per {far:0.1f} yrs"
+            else:
+                far = f"1 per {far:0.1f} days"
+            print(f'EVENT: {self.record["superevent_id"]} detected at {self.record["event"]["time"].replace("Z","")} UTC')
+            print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC (+{timeDelta:.2f} mins)')
+            print(f'FAR: {far}')
+            print(f"CLASSIFICATION: {self.record['event']['classification']}")
+            print(f"PROPERTIES: {self.record['event']['properties']})\n\n")
+        else:
+            print(f'EVENT: {self.record["superevent_id"]}')
+            print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC\n\n')
+
         # PARSE SKY MAP
         header, extras, fitsPath = {}, {}, None
         if self.record.get('event', {}):
@@ -111,16 +128,6 @@ class lvk(object):
                 # Decode, parse skymap, and print most probable sky location
                 skymap_bytes = b64decode(skymap_str)
                 skymap = Table.read(BytesIO(skymap_bytes))
-
-                level, ipix = ah.uniq_to_level_ipix(
-                    skymap[np.argmax(skymap['PROBDENSITY'])]['UNIQ']
-                )
-                ra, dec = ah.healpix_to_lonlat(ipix, ah.level_to_nside(level),
-                                               order='nested')
-                print(f'Most probable sky location (RA, Dec) = ({ra.deg}, {dec.deg})')
-
-                # Print some information from FITS header
-                print(f'Distance = {skymap.meta["DISTMEAN"]} +/- {skymap.meta["DISTSTD"]}')
 
                 localisation = skymap.meta["CREATOR"].lower()
 
