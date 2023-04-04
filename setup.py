@@ -13,8 +13,7 @@ def readme():
 install_requires = [
     'pyyaml',
     'fundamentals',
-    'gcn-kafka',
-    'astropy==5.1.0',
+    'astropy',
     'astropy-healpix',
     'numpy',
     'matplotlib',
