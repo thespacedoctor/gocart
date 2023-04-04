@@ -10,8 +10,8 @@ lvk:
     # CONVERT MAPS TO AITOFF PLOTS?
     aitoff:
         convert: True
-        day_night: False
-        sun_moon: False
+        day_night: True
+        sun_moon: True
         galactic_plane: True
     # CONVERT MAP TO ASCII FILE - ONE ROW PER HEALPIX PIXEL
     ascii_map:

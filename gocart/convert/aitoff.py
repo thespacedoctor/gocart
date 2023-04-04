@@ -251,6 +251,7 @@ class aitoff(object):
             data += f"Alert time: {alertDate}\n"
             instruments = (",").join(self.meta['ALERT']['event']['instruments'])
             data += f"Instruments: {instruments}\n"
+            data += f"Localisation: {self.meta['HEADER']['CREATOR']}\n"
 
             far = 1 / (float(self.meta['ALERT']['event']['far']) * 60. * 60. * 24.)
             if far > 1000:
