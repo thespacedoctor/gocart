@@ -13,7 +13,7 @@ def readme():
 install_requires = [
     'pyyaml',
     'fundamentals',
-    'astropy',
+    'astropy==5.1.0',
     'astropy-healpix',
     'numpy',
     'matplotlib',
@@ -22,7 +22,8 @@ install_requires = [
     'tabulate',
     'astropy_healpix',
     'ligo.skymap',
-    'gcn-kafka'
+    'gcn-kafka',
+    'extension_helpers'
 ]
 
 # READ THE DOCS SERVERS
