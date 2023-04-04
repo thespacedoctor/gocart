@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from unittest import mock
 from builtins import str
 import sys
 import os
@@ -22,10 +23,16 @@ class Mock(MagicMock):
         return Mock()
 
 
+# MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.colors',
+#                 'matplotlib.pyplot', 'matplotlib.cm', 'matplotlib.path', 'matplotlib.patches', 'matplotlib.projections', 'matplotlib.projections.geo', 'healpy', 'astropy', 'astropy.io', 'pylibmc', 'HMpTy', 'HMpTy.mysql', 'ligo', 'ligo.skymap', 'ligo.gracedb', 'ligo.gracedb.rest', 'pandas', 'astropy-healpix']
+# sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
+
+# Mock open3d because it fails to build in readthedocs
 MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.colors',
                 'matplotlib.pyplot', 'matplotlib.cm', 'matplotlib.path', 'matplotlib.patches', 'matplotlib.projections', 'matplotlib.projections.geo', 'healpy', 'astropy', 'astropy.io', 'pylibmc', 'HMpTy', 'HMpTy.mysql', 'ligo', 'ligo.skymap', 'ligo.gracedb', 'ligo.gracedb.rest', 'pandas', 'astropy-healpix']
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
-
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = mock.Mock()
 
 # WHERE DOES THIS conf.py FILE LIVE?
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
