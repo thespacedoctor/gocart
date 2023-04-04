@@ -51,9 +51,9 @@ class test_cl_utils(unittest.TestCase):
         cl_utils.main(args)
         return
 
-    def test_listen(self):
+    def test_echo(self):
         # TEST CL-OPTIONS
-        command = f"gocart -t listen -s {settingsFile}"
+        command = f"gocart echo 0.1"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
         return

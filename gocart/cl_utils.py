@@ -156,7 +156,7 @@ def main(arguments=None):
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
 
         nowInMicrosec = int((datetime.datetime.now()).timestamp() * 1000)
-        timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=int(a['daysAgo']))).timestamp() * 1000)
+        timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=float(a['daysAgo']))).timestamp() * 1000)
         timestamp2 = nowInMicrosec - 3600000  # now minus 3 mins
 
         start = consumer.offsets_for_times(
