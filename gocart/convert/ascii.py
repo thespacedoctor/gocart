@@ -24,6 +24,7 @@ class ascii(object):
     **Key Arguments:**
         - ``log`` -- logger
         - ``mapPath`` -- path the the healpix map or an astropy skymap table
+        - ``nside`` -- size of healpix pixels to resolve the sky to
         - ``settings`` -- the settings dictionary
 
     **Usage:**
@@ -37,6 +38,7 @@ class ascii(object):
     c = ascii(
         log=log,
         mapPath="/path/to/bayestar.multiorder.fits",
+        nside=64,
         settings=settings
     )
     asciiContent = c.convert(outputFilepath="/path/to/skymap.csv")
@@ -47,6 +49,7 @@ class ascii(object):
             self,
             log,
             mapPath,
+            nside=64,
             settings=False,
 
     ):
@@ -54,7 +57,7 @@ class ascii(object):
         log.debug("instansiating a new 'ascii' object")
         self.settings = settings
         self.mapPath = mapPath
-        self.nside = 64
+        self.nside = nside
 
         self.hdus, self.table = flatten_healpix_map(
             log=log,

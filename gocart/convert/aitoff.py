@@ -66,7 +66,8 @@ class aitoff(object):
             self,
             contours=True,
             galacticPlane=True,
-            daynight=True):
+            daynight=True,
+            sunmoon=True):
         """
         *convert the healpix map to an aitoff plot*
 
@@ -74,6 +75,7 @@ class aitoff(object):
             - ``contours`` -- plot 50 and 90% contours. Default *True*
             - ``galacticPlane`` -- plot galactic plane contours. Default *True*
             - ``daynight`` -- show sun-position and day/night terminator. Default *True*
+            - ``sunmoon`` -- plot sun and moon. Default *True*
 
         **Return:**
             - ``plotPath`` -- path to the printed plot
@@ -157,8 +159,6 @@ class aitoff(object):
             nlats = ((nlons - 1) / 2) + 1
             lons, lats = terminator(sun.ra.radian, sun.dec.radian, nlons)
 
-            # PLOT THE SUN
-            ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label="Sun", zorder=30)
             # DRAW THIN TERMINATOR LINE
             ax.plot(lons, lats, '#002b36', linewidth=0.3)
 
@@ -170,6 +170,19 @@ class aitoff(object):
             for nlon in range(nlons):
                 daynight[:, nlon] = np.where(lats2[:, nlon] < lats[nlon], 0, daynight[:, nlon])
             ax.contourf(lons2, lats2, daynight, 1, colors=[(0.0, 0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 0.2)], zorder=3)
+
+        # PLOT THE SUN
+        if sunmoon:
+            t = Time(header['DATE-OBS'], scale='utc')
+
+            # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
+            sun = get_sun(t).icrs
+            sun.ra.degree = -sun.ra.degree + 180
+            if sun.ra.degree > 180.:
+                sun.ra.degree -= 360
+            sun.ra.radian = np.deg2rad(sun.ra.degree)
+
+            ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label="Sun", zorder=30)
 
             # PLOT THE MOON
             moon = get_moon(t).icrs

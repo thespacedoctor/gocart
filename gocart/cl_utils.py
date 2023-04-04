@@ -65,7 +65,7 @@ def main(arguments=None):
         a[varname] = val
         log.debug('%s = %s' % (varname, val,))
 
-    if settings["gcn-kafka"]["group_id"] == "XXXX":
+    if "gcn-kafka" in settings and settings["gcn-kafka"]["group_id"] == "XXXX":
 
         import uuid as pyuuid
         group_id = pyuuid.uuid1().int
@@ -79,6 +79,8 @@ def main(arguments=None):
             content = readFile.read().replace("group_id: XXXX", f"group_id: {group_id}")
         with codecs.open(filepath, encoding='utf-8', mode='w') as writeFile:
             writeFile.write(content)
+    elif "gcn-kafka" not in settings:
+        return
 
     ## START LOGGING ##
     startTime = times.get_now_sql_datetime()
@@ -104,6 +106,10 @@ def main(arguments=None):
         return
 
     topic = 'igwn.gwalert'
+
+    if len(settings['gcn-kafka']['client_id']) < 6 or len(settings['gcn-kafka']['client_secret']) < 6:
+        print("Please add your gcn-kafka client ID and secret to the gocart.yaml settings file.")
+        return
 
     # CALL FUNCTIONS/OBJECTS
     if a['listen']:

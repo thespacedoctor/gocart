@@ -1,11 +1,10 @@
 # Installation
 
-The easiest way to install gocart is to use `pip` (here we show the install inside of a conda environment):
+The easiest way to install gocart is to use `conda` (here we show the install inside of a conda environment):
 
 ``` bash
-conda create -n gocart python=3.7 pip
+conda create -n gocart python=3.7 pip gocart
 conda activate gocart
-pip install gocart
 ```
 
 Or you can clone the [github repo](https://github.com/thespacedoctor/gocart) and install from a local version of the code:

@@ -152,22 +152,28 @@ class lvk(object):
             yaml.dump(meta, stream, default_flow_style=False)
 
         if fitsPath:
-            c = ascii(
-                log=self.log,
-                mapPath=fitsPath,
-                settings=self.settings
-            )
-            asciiContent = c.convert(outputFilepath=alertDir + "/skymap.csv")
+            if self.settings["lvk"]["ascii_map"]["convert"]:
+                c = ascii(
+                    log=self.log,
+                    mapPath=fitsPath,
+                    nside=self.settings["lvk"]["ascii_map"]["nside"],
+                    settings=self.settings
+                )
+                asciiContent = c.convert(outputFilepath=alertDir + "/skymap.csv")
 
-            from gocart.convert import aitoff
-            c = aitoff(
-                log=self.log,
-                mapPath=fitsPath,
-                outputFolder=alertDir,
-                settings=self.settings,
-                meta=meta
-            )
-            c.convert()
+            if self.settings["lvk"]["aitoff"]["convert"]:
+                from gocart.convert import aitoff
+                c = aitoff(
+                    log=self.log,
+                    mapPath=fitsPath,
+                    outputFolder=alertDir,
+                    settings=self.settings,
+                    meta=meta
+                )
+                c.convert(
+                    galacticPlane=self.settings["lvk"]["aitoff"]["galactic_plane"],
+                    daynight=self.settings["lvk"]["aitoff"]["day_night"],
+                    sunmoon=self.settings["lvk"]["aitoff"]["sun_moon"])
 
         self.log.debug('completed the ``parse`` method')
         return lvk

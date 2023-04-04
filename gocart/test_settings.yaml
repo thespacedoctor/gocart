@@ -4,6 +4,17 @@ lvk:
     parse_mock_events: True
     parse_real_events: False
     download_dir: ~/lvk_events
+    # CONVERT MAPS TO AITOFF PLOTS?
+    aitoff:
+        convert: True
+        day_night: False
+        sun_moon: False
+        galactic_plane: True
+    # CONVERT MAP TO ASCII FILE - ONE ROW PER HEALPIX PIXEL
+    ascii_map:
+        convert: True
+        # THE SIZE OF HEALPIX PIXELS TO RESOLVE SKY TO. NSIDE = 64 IS ~0.84 deg2 PER PIXEL.
+        nside: 16
 
 gcn-kafka:
     client_id: XXXX
