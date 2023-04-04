@@ -281,6 +281,8 @@ class aitoff(object):
 
         plt.savefig(self.outputFolder + "/skymap.png", bbox_inches='tight', dpi=300)
 
+        plt.close()
+
         self.log.debug('completed the ``convert`` method')
         return None
 
