@@ -13,6 +13,7 @@ def readme():
 install_requires = [
     'pyyaml',
     'fundamentals',
+    'extension_helpers',
     'astropy==5.1.0',
     'astropy-healpix',
     'numpy',
@@ -23,7 +24,7 @@ install_requires = [
     'astropy_healpix',
     'ligo.skymap',
     'gcn-kafka',
-    'extension_helpers'
+
 ]
 
 # READ THE DOCS SERVERS
