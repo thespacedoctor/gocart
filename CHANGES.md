@@ -3,6 +3,10 @@
 
 <!-- **vx.x.x - xxdatexx** -->
 
+**v0.1.7 - April 4, 2023**
+
+- **FIXED** -- unit test fix
+
 **v0.1.6 - April 4, 2023**
 
 - **ENHANCEMENT** -- added localisation type to aitoff maps
