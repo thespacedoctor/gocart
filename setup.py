@@ -13,7 +13,6 @@ def readme():
 install_requires = [
     'pyyaml',
     'fundamentals',
-    'extension_helpers',
     'astropy==5.1.0',
     'astropy-healpix',
     'numpy',
@@ -30,7 +29,7 @@ install_requires = [
 exists = os.path.exists("/home/docs/")
 if exists:
     c_exclude_list = ['healpy', 'astropy',
-                      'numpy', 'sherlock', 'wcsaxes', 'HMpTy', 'ligo-gracedb', 'ligo.skymap']
+                      'numpy', 'sherlock', 'wcsaxes', 'HMpTy', 'ligo-gracedb', 'ligo.skymap', 'astropy']
     for e in c_exclude_list:
         try:
             install_requires.remove(e)
