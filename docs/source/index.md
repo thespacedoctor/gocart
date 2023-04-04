@@ -7,8 +7,6 @@
    :maxdepth: 4
    :caption: Table of Contents
 
-   install
-   initialisation
    todolist
    changes_link
 ```

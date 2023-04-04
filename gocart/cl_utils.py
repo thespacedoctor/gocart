@@ -65,6 +65,7 @@ def main(arguments=None):
         a[varname] = val
         log.debug('%s = %s' % (varname, val,))
 
+    firstConnect = False
     if "gcn-kafka" in settings and settings["gcn-kafka"]["group_id"] == "XXXX":
 
         import uuid as pyuuid
@@ -79,6 +80,7 @@ def main(arguments=None):
             content = readFile.read().replace("group_id: XXXX", f"group_id: {group_id}")
         with codecs.open(filepath, encoding='utf-8', mode='w') as writeFile:
             writeFile.write(content)
+        firstConnect = True
     elif "gcn-kafka" not in settings:
         return
 
@@ -117,9 +119,13 @@ def main(arguments=None):
         from confluent_kafka import TopicPartition
         from gocart.parsers import lvk
 
-        config = {'group.id': settings["gcn-kafka"]["group_id"],
-                  'auto.offset.reset': 'earliest',
-                  'enable.auto.commit': False}
+        if firstConnect:
+            config = {'group.id': settings["gcn-kafka"]["group_id"],
+                      'enable.auto.commit': False}
+        else:
+            config = {'group.id': settings["gcn-kafka"]["group_id"],
+                      'auto.offset.reset': 'earliest',
+                      'enable.auto.commit': False}
 
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')

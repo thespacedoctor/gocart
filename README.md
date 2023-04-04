@@ -33,7 +33,7 @@ Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs
 The easiest way to install gocart is to use `conda`:
 
 ``` bash
-conda create -n gocart python=3.7 pip gocart -c conda-forge
+conda create -n gocart python=3.9 pip gocart -c conda-forge
 conda activate gocart
 ```
 
@@ -59,21 +59,19 @@ python setup.py install
 
 To check installation was successful run `gocart -v`. This should return the version number of the install.
 
-### Development
+## Initialising gocart
 
-If you want to tinker with the code, then install in development mode. This means you can modify the code from your cloned repo:
+Before using gocart you need to use the `init` command to generate a user settings file. Running the following creates a [yaml](https://learnxinyminutes.com/docs/yaml/) settings file in your home folder under `~/.config/gocart/gocart.yaml`:
 
-``` bash
-git clone git@github.com:thespacedoctor/gocart.git
-cd gocart
-python setup.py develop
+```bash
+gocart init
 ```
 
-[Pull requests](https://github.com/thespacedoctor/gocart/pulls) are welcomed! 
+The file is initially populated with gocart's default settings which can be adjusted to your preference.
 
-<!-- ### Sublime Snippets
+If at any point the user settings file becomes corrupted or you just want to start afresh, simply trash the `gocart.yaml` file and rerun `gocart init`.
 
-If you use [Sublime Text](https://www.sublimetext.com/) as your code editor, and you're planning to develop your own python code with soxspipe, you might find [my Sublime Snippets](https://github.com/thespacedoctor/gocart-Sublime-Snippets) useful. -->
+You are now ready to start using gocart.
 
 
 
