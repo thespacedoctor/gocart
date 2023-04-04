@@ -120,6 +120,7 @@ def main(arguments=None):
         from gocart.parsers import lvk
 
         if firstConnect:
+            print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             config = {'group.id': settings["gcn-kafka"]["group_id"],
                       'enable.auto.commit': False}
         else:
