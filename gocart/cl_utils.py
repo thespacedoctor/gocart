@@ -66,18 +66,21 @@ def main(arguments=None):
         log.debug('%s = %s' % (varname, val,))
 
     firstConnect = False
-    if "gcn-kafka" in settings and settings["gcn-kafka"]["group_id"] == "XXXX":
+    if "gcn-kafka" in settings and (not settings["gcn-kafka"]["group_id"] or len(settings["gcn-kafka"]["group_id"]) < 7):
 
+        from os.path import expanduser
         import uuid as pyuuid
+        import re
         group_id = pyuuid.uuid1().int
         settings["gcn-kafka"]["group_id"] = group_id
 
-        from os.path import expanduser
         home = expanduser("~")
         filepath = home + "/.config/gocart/gocart.yaml"
         import codecs
         with codecs.open(filepath, encoding='utf-8', mode='r') as readFile:
-            content = readFile.read().replace("group_id: XXXX", f"group_id: {group_id}")
+            content = readFile.read()
+            regex = re.compile(r'group_id\:.*')
+            content = regex.sub(f"group_id: {group_id}", content, count=1)
         with codecs.open(filepath, encoding='utf-8', mode='w') as writeFile:
             writeFile.write(content)
         firstConnect = True
@@ -121,11 +124,9 @@ def main(arguments=None):
 
         if firstConnect:
             print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
-            config = {'group.id': settings["gcn-kafka"]["group_id"],
-                      'enable.auto.commit': True}
+            config = {'group.id': settings["gcn-kafka"]["group_id"]}
         else:
-            config = {'group.id': settings["gcn-kafka"]["group_id"],
-                      'enable.auto.commit': True}
+            config = {'group.id': settings["gcn-kafka"]["group_id"]}
 
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
@@ -140,9 +141,11 @@ def main(arguments=None):
                     record=message.value(),
                     settings=settings
                 ).parse()
-                
+
                 if a["testFlag"]:
                     stop = True
+                else:
+                    consumer.commit(message)
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS
