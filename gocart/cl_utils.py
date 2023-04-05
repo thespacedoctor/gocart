@@ -122,11 +122,10 @@ def main(arguments=None):
         if firstConnect:
             print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             config = {'group.id': settings["gcn-kafka"]["group_id"],
-                      'enable.auto.commit': False}
+                      'enable.auto.commit': True}
         else:
             config = {'group.id': settings["gcn-kafka"]["group_id"],
-                      'auto.offset.reset': 'earliest',
-                      'enable.auto.commit': False}
+                      'enable.auto.commit': True}
 
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
@@ -141,7 +140,7 @@ def main(arguments=None):
                     record=message.value(),
                     settings=settings
                 ).parse()
-
+                
                 if a["testFlag"]:
                     stop = True
 
