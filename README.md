@@ -89,7 +89,7 @@ Open your gocart settings file at `~/.config/gocart/gocart.yaml` and copy and pa
 
 [![](https://live.staticflickr.com/65535/52790845580_b5a1145e13_z.png)](https://live.staticflickr.com/65535/52790845580_b5a1145e13_o.png)
 
-Don't worry about the `group_id` parameter. Note the example client above has been deleted, so the credentials quoted here will not work.
+Don't worry about the `group_id` parameter, it's initially set to XXXX but gocart will replace this with a unique value when it's first run. It is this `group_id` that allows GCN Kafka to remember which alerts you have or have not heard before. Note the example client above has been deleted, so the credentials quoted here will not work.
 
 You are now ready to start using gocart.
 
