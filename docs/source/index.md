@@ -5,9 +5,11 @@
 ```eval_rst
 .. toctree::
    :maxdepth: 4
-   :caption: Table of Contents
 
-   todolist
+   Listen and Echo <listen_and_echo>
+   File and Folders <files_and_folders>
+   Gocart Settings <settings>
+
    changes_link
 ```
 

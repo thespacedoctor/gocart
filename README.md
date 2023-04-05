@@ -71,8 +71,26 @@ The file is initially populated with gocart's default settings which can be adju
 
 If at any point the user settings file becomes corrupted or you just want to start afresh, simply trash the `gocart.yaml` file and rerun `gocart init`.
 
+## GCN Kafka Credentials
+
+When you first come to use gocart, you will need to add a GCN Kafka Client ID and Secret to the `gocart.yaml` settings file. To get these credentials you will need to signup for a [GCN Notices account here](https://gcn.nasa.gov/quickstart).
+
+[![](https://live.staticflickr.com/65535/52790651039_d88a05a4f5_b.jpg)](https://live.staticflickr.com/65535/52790651039_d88a05a4f5_b.jpg)
+
+Once signed in, fill in a suitable name for your new client (any name will do, so gocart is as good a name as any). Fill in the captcha and click 'Create New Credentials'.
+
+[![](https://live.staticflickr.com/65535/52790654254_2b3611c714_z.png)](https://live.staticflickr.com/65535/52790654254_2b3611c714_o.png)
+
+In the 'Customize Alerts' section, don't be concerned about what Notice Types to select as these are only used to generate template code in the next section. Not selecting any is fine. Click the 'Generate Code' button. You will now be presented with your newly created client credentials within the body of the code snippet:
+
+[![](https://live.staticflickr.com/65535/52790833500_7535fd6b34_z.png)](https://live.staticflickr.com/65535/52790833500_7535fd6b34_o.png)
+
+Open your gocart settings file at `~/.config/gocart/gocart.yaml` and copy and paste these credentials into the appropriate place.
+
+[![](https://live.staticflickr.com/65535/52790845580_b5a1145e13_z.png)](https://live.staticflickr.com/65535/52790845580_b5a1145e13_o.png)
+
+Don't worry about the `group_id` parameter. Note the example client above has been deleted, so the credentials quoted here will not work.
+
 You are now ready to start using gocart.
-
-
 
 

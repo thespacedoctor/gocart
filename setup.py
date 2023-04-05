@@ -16,7 +16,7 @@ install_requires = [
     'astropy==5.1.0',
     'astropy-healpix',
     'numpy',
-    'matplotlib',
+    'matplotlib-base',
     'healpy',
     'pandas',
     'tabulate',
