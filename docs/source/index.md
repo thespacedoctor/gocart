@@ -4,6 +4,14 @@
 
 ```eval_rst
 .. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   Get Started <index>
+```
+
+```eval_rst
+.. toctree::
    :maxdepth: 4
 
    Listen and Echo <listen_and_echo>
@@ -12,8 +20,6 @@
 
    changes_link
 ```
-
-## API Reference
 
 ```eval_rst
 .. toctree::
@@ -32,12 +38,3 @@
 ```
 
 
-```eval_rst
-.. include:: /autosummary_include.rst
-```
-
-```eval_rst
-.. include:: /genindex.rst
-```
-
-{{../../CHANGES.md}}
