@@ -134,6 +134,7 @@ def main(arguments=None):
 
         stop = False
         test = 0
+        more = True
         while not stop:
             print(f"TEST: {test}")
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
