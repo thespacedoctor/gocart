@@ -140,7 +140,7 @@ def main(arguments=None):
             if firstConnect:
                 count = 0
                 print("HERE")
-                for message in consumer(num_messages=10000000):
+                for message in consumer.consume(num_messages=10000000):
                     print("HERE1")
                     print(message.value())
                     count += 1
