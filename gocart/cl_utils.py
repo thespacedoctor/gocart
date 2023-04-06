@@ -128,10 +128,6 @@ def main(arguments=None):
             'auto.offset.reset' = 'earliest'
         }
 
-        if firstConnect:
-            print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
-            config['auto.offset.reset'] = 'latest'
-
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
         consumer.subscribe([topic])
@@ -140,9 +136,12 @@ def main(arguments=None):
         while not stop:
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
             if firstConnect:
+                count = 0
                 for message in consumer.consume(timeout=1):
+                    count += 1
                     consumer.commit(message)
                 firstConnect = False
+                print("This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             for message in consumer.consume(timeout=1):
                 parser = lvk(
                     log=log,
