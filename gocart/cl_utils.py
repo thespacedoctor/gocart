@@ -133,7 +133,9 @@ def main(arguments=None):
         consumer.subscribe([topic])
 
         stop = False
+        test = 0
         while not stop:
+            print(f"TEST: {test}")
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
             if firstConnect:
                 count = 0
@@ -142,12 +144,12 @@ def main(arguments=None):
                     print("HERE1")
                     print(message.value())
                     count += 1
-                    consumer.commit(message)
+
                 for message in consumer.consume(timeout=1):
                     print("HERE2")
                     print(message.value())
                     count += 1
-                    consumer.commit(message)
+
                 firstConnect = False
                 print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             for message in consumer.consume(timeout=1):
@@ -157,6 +159,7 @@ def main(arguments=None):
                 #     record=message.value(),
                 #     settings=settings
                 # ).parse()
+            test += 1
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS
