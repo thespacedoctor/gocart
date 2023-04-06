@@ -7,7 +7,7 @@
     Usage:
         gocart init
         gocart echo <daysAgo> [-s <pathToSettingsFile>]
-        gocart [-t] listen [-s <pathToSettingsFile>]
+        gocart listen [-s <pathToSettingsFile>]
     
     
     Options:
