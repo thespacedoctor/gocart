@@ -142,8 +142,8 @@ def main(arguments=None):
                 count = 0
                 print("HERE")
                 while more:
-                    messages = consumer.consume(num_messages=100, timeout=1)
-                    print(len(messages))
+                    messages = consumer.consume(num_messages=100, timeout=1000)
+                    print(f"MESSGAGE: {len(messages)}")
                     for message in messages:
                         count += 1
                         print(count)
