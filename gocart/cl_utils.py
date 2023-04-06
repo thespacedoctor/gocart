@@ -142,7 +142,7 @@ def main(arguments=None):
                 count = 0
                 print("HERE")
                 while more:
-                    for message in consumer(num_messages=1, timeout=1):
+                    for message in consumer.consume(num_messages=1, timeout=1):
                         count += 1
                         print(count)
                         consumer.commit(message)
