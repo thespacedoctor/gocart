@@ -140,14 +140,16 @@ def main(arguments=None):
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
             if firstConnect:
                 count = 0
-                print("HERE")
+                print("Marking previous messages as read, this can take a few minutes ...")
                 while more:
-                    messages = consumer.consume(num_messages=100, timeout=1000)
-                    print(f"MESSGAGE: {len(messages)}")
+                    messages = consumer.consume(num_messages=300, timeout=3000)
+
                     for message in messages:
                         count += 1
-                        print(count)
                         consumer.commit(message)
+                    print(f"count: {count}")
+                    if not len(messages):
+                        more = False
 
                 firstConnect = False
                 print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
