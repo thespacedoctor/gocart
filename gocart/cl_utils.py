@@ -137,21 +137,21 @@ def main(arguments=None):
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
             if firstConnect:
                 count = 0
+                print("HERE")
                 for message in consumer.consume(timeout=1):
-                    print("one")
+                    print("HERE1")
                     print(message.value())
                     count += 1
                     consumer.commit(message)
                 for message in consumer.consume(timeout=1):
-                    print("two")
+                    print("HERE2")
                     print(message.value())
                     count += 1
                     consumer.commit(message)
                 firstConnect = False
                 print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             for message in consumer.consume(timeout=1):
-                print("three")
-                print(message.value())
+                print("HERE3")
                 parser = lvk(
                     log=log,
                     record=message.value(),
