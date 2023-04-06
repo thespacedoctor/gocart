@@ -3,6 +3,12 @@
 
 <!-- **vx.x.x - xxdatexx** -->
 
+**v0.1.8 - April 6, 2023**
+
+- **FIXED** -- echo command now parses message to the end of the partition queue
+- **FIXED** -- listen command remembers where it left off
+- **FIXED** -- sun & moon coordinates ... they were not geocentric!
+
 **v0.1.7 - April 4, 2023**
 
 - **FIXED** -- unit test fix
