@@ -125,7 +125,6 @@ def main(arguments=None):
         config = {
             'group.id': settings["gcn-kafka"]["group_id"],
             'enable.auto.commit': True,
-            'auto.offset.reset': 'earliest',
             'auto.commit.interval.ms': 1000
         }
 
