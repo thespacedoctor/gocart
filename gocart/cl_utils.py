@@ -142,7 +142,7 @@ def main(arguments=None):
                 count = 0
                 print("Marking previous messages as read, this can take a few minutes ...")
                 while more:
-                    messages = consumer.consume(num_messages=300, timeout=3000)
+                    messages = consumer.consume(num_messages=300, timeout=5)
 
                     for message in messages:
                         count += 1
