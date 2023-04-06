@@ -138,7 +138,7 @@ def main(arguments=None):
 
         stop = False
         while not stop:
-            for message in consumer.consume():
+            for message in consumer.consume(timeout=1):
 
                 parser = lvk(
                     log=log,
@@ -160,8 +160,13 @@ def main(arguments=None):
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
 
         nowInMicrosec = int((datetime.datetime.now()).timestamp() * 1000)
-        timestamp1 = int((datetime.datetime.now() - datetime.timedelta(days=float(a['daysAgo']))).timestamp() * 1000)
-        timestamp2 = nowInMicrosec - 3600000  # now minus 3 mins
+        since = datetime.datetime.now() - datetime.timedelta(days=float(a['daysAgo']))
+        since_utc = (datetime.datetime.utcnow() - datetime.timedelta(days=float(a['daysAgo']))).strftime("%Y-%m-%d %H:%M:%S")
+        timestamp1 = int((since).timestamp() * 1000)
+        since = since.strftime("%Y-%m-%d %H:%M:%S")
+        timestamp2 = nowInMicrosec - 180000  # now minus 3 mins
+
+        print(f"Echoing alerts since {since} ({since_utc} UTC)")
 
         start = consumer.offsets_for_times(
             [TopicPartition(topic, 0, timestamp1)])
@@ -169,7 +174,7 @@ def main(arguments=None):
             [TopicPartition(topic, 0, timestamp2)])
 
         consumer.assign(start)
-        for message in consumer.consume(end[0].offset - start[0].offset):
+        for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             parser = lvk(
                 log=log,
                 record=message.value(),
