@@ -152,11 +152,11 @@ def main(arguments=None):
                 print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
             for message in consumer.consume(timeout=1):
                 print("HERE3")
-                parser = lvk(
-                    log=log,
-                    record=message.value(),
-                    settings=settings
-                ).parse()
+                # parser = lvk(
+                #     log=log,
+                #     record=message.value(),
+                #     settings=settings
+                # ).parse()
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS
