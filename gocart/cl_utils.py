@@ -125,7 +125,7 @@ def main(arguments=None):
         config = {
             'group.id': settings["gcn-kafka"]["group_id"],
             'enable.auto.commit': False,
-            'auto.offset.reset' = 'earliest'
+            'auto.offset.reset': 'earliest'
         }
 
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
