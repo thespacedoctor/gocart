@@ -122,10 +122,17 @@ def main(arguments=None):
         from confluent_kafka import TopicPartition
         from gocart.parsers import lvk
 
+        config = {
+            'group.id': settings["gcn-kafka"]["group_id"],
+            'enable.auto.commit': True,
+            'auto_offset_reset': 'earliest',
+            'auto_commit_interval_ms': 1000
+        }
+
         if firstConnect:
             print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
+            config['auto_offset_reset'] = 'latest'
 
-        config = {'group.id': settings["gcn-kafka"]["group_id"], 'enable.auto.commit': True}
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
         consumer.subscribe([topic])
