@@ -66,7 +66,7 @@ def main(arguments=None):
         log.debug('%s = %s' % (varname, val,))
 
     firstConnect = False
-    if "gcn-kafka" in settings and (not settings["gcn-kafka"]["group_id"] or len(settings["gcn-kafka"]["group_id"]) < 7):
+    if "gcn-kafka" in settings and (not settings["gcn-kafka"]["group_id"] or len(str(settings["gcn-kafka"]["group_id"])) < 7):
 
         from os.path import expanduser
         import uuid as pyuuid
@@ -124,10 +124,8 @@ def main(arguments=None):
 
         if firstConnect:
             print("This is your first time using the listen command. gocart will now listen for all new incoming alerts. If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
-            config = {'group.id': settings["gcn-kafka"]["group_id"]}
-        else:
-            config = {'group.id': settings["gcn-kafka"]["group_id"]}
 
+        config = {'group.id': settings["gcn-kafka"]["group_id"], 'enable.auto.commit': True}
         consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
         consumer.subscribe([topic])
@@ -144,8 +142,6 @@ def main(arguments=None):
 
                 if a["testFlag"]:
                     stop = True
-                else:
-                    consumer.commit(message)
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS
