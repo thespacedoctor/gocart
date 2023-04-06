@@ -174,7 +174,7 @@ def main(arguments=None):
         since_utc = (datetime.datetime.utcnow() - datetime.timedelta(days=float(a['daysAgo']))).strftime("%Y-%m-%d %H:%M:%S")
         timestamp1 = int((since).timestamp() * 1000)
         since = since.strftime("%Y-%m-%d %H:%M:%S")
-        timestamp2 = nowInMicrosec - 180000  # now minus 3 mins
+        timestamp2 = nowInMicrosec - 1800000  # now minus 3 mins
 
         print(f"Echoing alerts since {since} ({since_utc} UTC)")
 

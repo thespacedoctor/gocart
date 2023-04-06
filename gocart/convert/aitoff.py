@@ -146,19 +146,25 @@ class aitoff(object):
 
         if daynight:
             t = Time(header['DATE-OBS'], scale='utc')
+            t = Time.now()
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
-            sun = get_sun(t).icrs
+            sun = get_sun(t)
             print(sun.ra.degree, sun.dec.degree)
             sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360
+            print(sun.ra.radian)
             sun.ra.radian = np.deg2rad(sun.ra.degree)
+            print(sun.ra.radian)
 
             # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
             nlons = 1441
             nlats = ((nlons - 1) / 2) + 1
             lons, lats = terminator(sun.ra.radian, sun.dec.radian, nlons)
+
+            for i, l in zip(lons, lats):
+                print(np.rad2deg(i), np.rad2deg(l))
 
             # DRAW THIN TERMINATOR LINE
             ax.plot(lons, lats, '#002b36', linewidth=0.3)
@@ -170,14 +176,14 @@ class aitoff(object):
             daynight = np.ones(lons2.shape)
             for nlon in range(nlons):
                 daynight[:, nlon] = np.where(lats2[:, nlon] < lats[nlon], 0, daynight[:, nlon])
-            ax.contourf(lons2, lats2, daynight, 1, colors=[(0.0, 0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 0.2)], zorder=3)
+            ax.contourf(lons2, lats2, daynight, 1, colors=[(0.0, 0.0, 0.0, 0.2), (0.0, 0.0, 0.0, 0.0)], zorder=3)
 
         # PLOT THE SUN
         if sunmoon:
             t = Time(header['DATE-OBS'], scale='utc')
-
+            t = Time.now()
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
-            sun = get_sun(t).icrs
+            sun = get_sun(t)
             sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360
@@ -186,7 +192,7 @@ class aitoff(object):
             ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label="Sun", zorder=30)
 
             # PLOT THE MOON
-            moon = get_moon(t).icrs
+            moon = get_moon(t)
             moon.ra.degree = -moon.ra.degree + 180
             if moon.ra.degree > 180.:
                 moon.ra.degree -= 360
