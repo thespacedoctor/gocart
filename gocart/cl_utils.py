@@ -142,12 +142,11 @@ def main(arguments=None):
                 count = 0
                 print("HERE")
                 while more:
-                    messages = consumer.consume(100, timeout=1)
+                    messages = consumer.consume(num_messages=100, timeout=1)
                     print(len(messages))
-                    count += len(messages)
-                    if not len(messages):
-                        more = False
                     for message in messages:
+                        count += 1
+                        print(count)
                         consumer.commit(message)
 
                 firstConnect = False
