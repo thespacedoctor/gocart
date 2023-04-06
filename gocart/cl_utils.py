@@ -173,6 +173,8 @@ def main(arguments=None):
         end = consumer.offsets_for_times(
             [TopicPartition(topic, 0, timestamp2)])
 
+        print(end[0].offset - start[0].offset)
+
         consumer.assign(start)
         for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             parser = lvk(
