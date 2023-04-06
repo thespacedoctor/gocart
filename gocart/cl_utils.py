@@ -140,10 +140,13 @@ def main(arguments=None):
             if firstConnect:
                 count = 0
                 print("HERE")
-                for message in consumer.consume(num_messages=100):
-                    print("HERE1")
-                    print(message.value())
-                    count += 1
+                while more:
+                    for message in consumer(num_messages=1, timeout=1):
+                        count += 1
+                        print(count)
+                        consumer.commit(message)
+                        if message is None:
+                            more = False
 
                 firstConnect = False
                 print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
