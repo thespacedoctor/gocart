@@ -169,14 +169,10 @@ def main(arguments=None):
         consumer = Consumer(client_id=settings['gcn-kafka']['client_id'],
                             client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
 
-        nowInMicrosec = int((datetime.datetime.now()).timestamp() * 1000)
-        since = datetime.datetime.now() - datetime.timedelta(days=float(a['daysAgo']))
-        since_utc = (datetime.datetime.utcnow() - datetime.timedelta(days=float(a['daysAgo']))).strftime("%Y-%m-%d %H:%M:%S")
-        timestamp1 = int((since).timestamp() * 1000)
-        since = since.strftime("%Y-%m-%d %H:%M:%S")
-        timestamp2 = nowInMicrosec - 180000  # now minus 3 mins
-
-        print(f"Echoing alerts since {since} ({since_utc} UTC)")
+        since_utc = datetime.datetime.now() - datetime.timedelta(days=float(a['daysAgo']))
+        timestamp1 = int((since_utc).timestamp() * 1000)
+        since_utc = since_utc.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"Echoing alerts since {since_utc} UTC")
 
         start = consumer.offsets_for_times(
             [TopicPartition(topic, 0, timestamp1)])
