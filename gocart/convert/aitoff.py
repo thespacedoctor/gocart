@@ -149,6 +149,7 @@ class aitoff(object):
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
             sun = get_sun(t).icrs
+            print(sun.ra.degree, sun.dec.degree)
             sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360

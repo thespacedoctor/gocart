@@ -6,7 +6,7 @@ Documentation for gocart can be found here: http://gocart.readthedocs.org
 Usage:
     gocart init
     gocart echo <daysAgo> [-s <pathToSettingsFile>]
-    gocart [-t] listen [-s <pathToSettingsFile>]
+    gocart listen [-s <pathToSettingsFile>]
 
 
 Options:
@@ -124,8 +124,8 @@ def main(arguments=None):
 
         config = {
             'group.id': settings["gcn-kafka"]["group_id"],
-            'enable.auto.commit': True,
-            'auto.commit.interval.ms': 1000
+            'enable.auto.commit': False,
+            'auto.offset.reset' = 'earliest'
         }
 
         if firstConnect:
@@ -138,16 +138,17 @@ def main(arguments=None):
 
         stop = False
         while not stop:
+            # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
+            if firstConnect:
+                for message in consumer.consume(timeout=1):
+                    consumer.commit(message)
+                firstConnect = False
             for message in consumer.consume(timeout=1):
-
                 parser = lvk(
                     log=log,
                     record=message.value(),
                     settings=settings
                 ).parse()
-
-                if a["testFlag"]:
-                    stop = True
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS
