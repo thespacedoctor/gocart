@@ -174,27 +174,26 @@ def main(arguments=None):
         since_utc = (datetime.datetime.utcnow() - datetime.timedelta(days=float(a['daysAgo']))).strftime("%Y-%m-%d %H:%M:%S")
         timestamp1 = int((since).timestamp() * 1000)
         since = since.strftime("%Y-%m-%d %H:%M:%S")
-        timestamp2 = nowInMicrosec - 18000000  # now minus 3 mins
+        timestamp2 = nowInMicrosec - 180000  # now minus 3 mins
 
         print(f"Echoing alerts since {since} ({since_utc} UTC)")
 
         start = consumer.offsets_for_times(
             [TopicPartition(topic, 0, timestamp1)])
-        end = consumer.offsets_for_times(
-            [TopicPartition(topic, 0, timestamp2)])
-
-        print(start[0].offset)
-        print(end[0].offset)
-
-        print(end[0].offset - start[0].offset)
 
         consumer.assign(start)
-        for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
-            parser = lvk(
-                log=log,
-                record=message.value(),
-                settings=settings
-            ).parse()
+
+        more = True
+        while more:
+            messages = consumer.consume(num_messages=1, timeout=10)
+            for message in messages:
+                parser = lvk(
+                    log=log,
+                    record=message.value(),
+                    settings=settings
+                ).parse()
+            if not len(messages):
+                more = False
 
     ## FINISH LOGGING ##
     endTime = times.get_now_sql_datetime()

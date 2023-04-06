@@ -146,25 +146,21 @@ class aitoff(object):
 
         if daynight:
             t = Time(header['DATE-OBS'], scale='utc')
-            t = Time.now()
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
             sun = get_sun(t)
-            print(sun.ra.degree, sun.dec.degree)
             sun.ra.degree = -sun.ra.degree + 180
             if sun.ra.degree > 180.:
                 sun.ra.degree -= 360
-            print(sun.ra.radian)
             sun.ra.radian = np.deg2rad(sun.ra.degree)
-            print(sun.ra.radian)
 
             # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
             nlons = 1441
             nlats = ((nlons - 1) / 2) + 1
             lons, lats = terminator(sun.ra.radian, sun.dec.radian, nlons)
 
-            for i, l in zip(lons, lats):
-                print(np.rad2deg(i), np.rad2deg(l))
+            # for i, l in zip(lons, lats):
+            #     print(np.rad2deg(i), np.rad2deg(l))
 
             # DRAW THIN TERMINATOR LINE
             ax.plot(lons, lats, '#002b36', linewidth=0.3)
@@ -181,7 +177,7 @@ class aitoff(object):
         # PLOT THE SUN
         if sunmoon:
             t = Time(header['DATE-OBS'], scale='utc')
-            t = Time.now()
+
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
             sun = get_sun(t)
             sun.ra.degree = -sun.ra.degree + 180
