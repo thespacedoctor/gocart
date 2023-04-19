@@ -3,6 +3,10 @@
 
 <!-- **vx.x.x - xxdatexx** -->
 
+**v0.1.9 - April 19, 2023**
+
+- **REFACTOR** -- sun and moon footprints replace terminator
+
 **v0.1.8 - April 6, 2023**
 
 - **FIXED** -- echo command now parses message to the end of the partition queue
