@@ -63,19 +63,20 @@ class aitoff(object):
         return None
 
     def convert(
-            self,
-            contours=True,
-            galacticPlane=True,
-            daynight=True,
-            sunmoon=True):
+        self,
+        contours=True,
+        galacticPlane=True,
+        sunmoon=True,
+        sunmoonContour=True
+    ):
         """
         *convert the healpix map to an aitoff plot*
 
         **Key Arguments:**
             - ``contours`` -- plot 50 and 90% contours. Default *True*
             - ``galacticPlane`` -- plot galactic plane contours. Default *True*
-            - ``daynight`` -- show sun-position and day/night terminator. Default *True*
             - ``sunmoon`` -- plot sun and moon. Default *True*
+            - ``sunmoonContour`` -- show contours within 33 deg of sun and 20 deg from moon
 
         **Return:**
             - ``plotPath`` -- path to the printed plot
@@ -136,7 +137,7 @@ class aitoff(object):
         # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
         std = data.std()
         mean = data.mean()
-        #image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
+        # image = ax.pcolormesh(long, lat, data, rasterized=False, cmap=cmap, vmin=mean, vmax=mean + 5 * std)
 
         # GRATICULE
         ax.set_longitude_grid(30)
@@ -144,7 +145,7 @@ class aitoff(object):
         ax.xaxis.set_major_formatter(ThetaFormatterShiftPi(30))
         ax.set_longitude_grid_ends(90)
 
-        if daynight:
+        if sunmoonContour:
             t = Time(header['DATE-OBS'], scale='utc')
 
             # FIND SUN AND PLACE ON CORRECT PLOT COORDINATE
@@ -157,22 +158,41 @@ class aitoff(object):
             # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
             nlons = 1441
             nlats = ((nlons - 1) / 2) + 1
-            lons, lats = terminator(sun.ra.radian, sun.dec.radian, nlons)
 
-            # for i, l in zip(lons, lats):
-            #     print(np.rad2deg(i), np.rad2deg(l))
-
-            # DRAW THIN TERMINATOR LINE
-            ax.plot(lons, lats, '#002b36', linewidth=0.3)
-
-            # COLOR IN THE NIGHT
+            # COLOR IN THE SUN
             lons2 = np.linspace(-np.pi, np.pi, nlons)
             lats2 = np.linspace(-np.pi / 2, np.pi / 2, int(nlats))
             lons2, lats2 = np.meshgrid(lons2, lats2)
-            daynight = np.ones(lons2.shape)
-            for nlon in range(nlons):
-                daynight[:, nlon] = np.where(lats2[:, nlon] < lats[nlon], 0, daynight[:, nlon])
-            ax.contourf(lons2, lats2, daynight, 1, colors=[(0.0, 0.0, 0.0, 0.2), (0.0, 0.0, 0.0, 0.0)], zorder=3)
+            sunlight = np.ones(lons2.shape)
+            raSep = sun.ra.radian - lons2
+            raSep[raSep > np.pi] = 2 * np.pi - raSep[raSep > np.pi]
+            separation = ((raSep * np.cos((sun.dec.radian + lats2) / 2))**2 + (sun.dec.radian - lats2)**2)**0.5
+            sunlight[separation < np.radians(33)] = 0
+            sunyellow = matplotlib.colors.colorConverter.to_rgba('#b58900', alpha=0.2)
+            ax.contourf(lons2, lats2, sunlight, 1, colors=[sunyellow, (0.0, 0.0, 0.0, 0.0)], zorder=3)
+
+            # PLOT THE MOON
+            moon = get_moon(t)
+            moon.ra.degree = -moon.ra.degree + 180
+            if moon.ra.degree > 180.:
+                moon.ra.degree -= 360
+            moon.ra.radian = np.deg2rad(moon.ra.degree)
+
+            # COMPUTE LONS AND LATS OF DAY/NIGHT TERMINATOR.
+            nlons = 1441
+            nlats = ((nlons - 1) / 2) + 1
+
+            # COLOR IN THE SUN
+            lons2 = np.linspace(-np.pi, np.pi, nlons)
+            lats2 = np.linspace(-np.pi / 2, np.pi / 2, int(nlats))
+            lons2, lats2 = np.meshgrid(lons2, lats2)
+            moonlight = np.ones(lons2.shape)
+            raSep = moon.ra.radian - lons2
+            raSep[raSep > np.pi] = 2 * np.pi - raSep[raSep > np.pi]
+            separation = ((raSep * np.cos((moon.dec.radian + lats2) / 2))**2 + (moon.dec.radian - lats2)**2)**0.5
+            moonlight[separation < np.radians(20)] = 0
+            moonblue = matplotlib.colors.colorConverter.to_rgba('#268bd2', alpha=0.2)
+            ax.contourf(lons2, lats2, moonlight, 1, colors=[moonblue, (0.0, 0.0, 0.0, 0.0)], zorder=3)
 
         # PLOT THE SUN
         if sunmoon:
@@ -185,7 +205,10 @@ class aitoff(object):
                 sun.ra.degree -= 360
             sun.ra.radian = np.deg2rad(sun.ra.degree)
 
-            ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label="Sun", zorder=30)
+            label = "Sun"
+            if sunmoonContour:
+                label += " (within $33^o$)"
+            ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label=label, zorder=30)
 
             # PLOT THE MOON
             moon = get_moon(t)
@@ -193,7 +216,11 @@ class aitoff(object):
             if moon.ra.degree > 180.:
                 moon.ra.degree -= 360
             moon.ra.radian = np.deg2rad(moon.ra.degree)
-            ax.scatter(moon.ra.radian, moon.dec.radian, color="#268bd2", alpha=0.8, s=20, marker="o", edgecolors="#1e6ea7", linewidths=0.5, label="Moon", zorder=29)
+
+            label = "Moon"
+            if sunmoonContour:
+                label += " (within $20^o$)"
+            ax.scatter(moon.ra.radian, moon.dec.radian, color="#268bd2", alpha=0.8, s=20, marker="o", edgecolors="#1e6ea7", linewidths=0.5, label=label, zorder=29)
 
         handles, labels = plt.gca().get_legend_handles_labels()
         if galacticPlane:
@@ -289,11 +316,3 @@ class aitoff(object):
 
         self.log.debug('completed the ``convert`` method')
         return None
-
-
-def terminator(ra, dec, nlons):
-    import numpy as np
-    lons = np.linspace(-np.pi, np.pi, nlons)
-    longitude = lons + ra
-    lats = np.arctan(-np.cos(longitude) / np.tan(dec))
-    return lons, lats

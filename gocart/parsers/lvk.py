@@ -172,7 +172,7 @@ class lvk(object):
                 )
                 c.convert(
                     galacticPlane=self.settings["lvk"]["aitoff"]["galactic_plane"],
-                    daynight=self.settings["lvk"]["aitoff"]["day_night"],
+                    sunmoonContour=self.settings["lvk"]["aitoff"]["sun_moon_contour"],
                     sunmoon=self.settings["lvk"]["aitoff"]["sun_moon"])
 
         self.log.debug('completed the ``parse`` method')
