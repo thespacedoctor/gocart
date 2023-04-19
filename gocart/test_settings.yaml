@@ -7,7 +7,8 @@ lvk:
     # CONVERT MAPS TO AITOFF PLOTS?
     aitoff:
         convert: True
-        day_night: False
+        # PLOT CONTOUR 33 DEG FROM SUN AND 20 DEG FROM MOON
+        sun_moon_contour: True
         sun_moon: False
         galactic_plane: True
     # CONVERT MAP TO ASCII FILE - ONE ROW PER HEALPIX PIXEL
