@@ -3,6 +3,10 @@
 
 <!-- **vx.x.x - xxdatexx** -->
 
+**v0.1.10 - April 21, 2023**
+
+- **REFACTOR** -- splitting mockevents from superevents
+
 **v0.1.9 - April 19, 2023**
 
 - **REFACTOR** -- sun and moon footprints replace terminator
