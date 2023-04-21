@@ -95,11 +95,13 @@ class lvk(object):
         import yaml
 
         # ADD EVENT FILTERING HERE
-
         # ONCE WE HAVE DECIDED TO SAVE THE EVENT/ALERT
         # RECURSIVELY CREATE MISSING DIRECTORIES
         alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace(" ", "").replace("Z", "")
-        alertDir = self.download_dir + "/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
+        if self.record["superevent_id"][0] == 'M':
+            alertDir = self.download_dir + "/mockevents/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
+        else:
+            alertDir = self.download_dir + "/superevents/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
         if not os.path.exists(alertDir):
             os.makedirs(alertDir)
 
