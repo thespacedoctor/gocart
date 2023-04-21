@@ -19,4 +19,5 @@ The alert folder host various files:
 3. `skymap.csv` is an ascii representation of a single order healpix skymap, with one row per pixel and giving sky-coordinates, probability and distance for each pixel.
 4. `skymap.png` is a aitoff rendering of the skymap, galactic plane, sun and moon position and some extra information useful for planning observations.
 
-[![](https://live.staticflickr.com/65535/52792300771_28efb812bb_b.jpg)](https://live.staticflickr.com/65535/52792300771_28efb812bb_b.jpg)
+[![](https://live.staticflickr.com/65535/52834508061_1862682dba_b.jpg)](https://live.staticflickr.com/65535/52834508061_1862682dba_b.jpg)
+
