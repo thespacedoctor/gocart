@@ -61,6 +61,7 @@ class lvk(object):
         # WHICH EVENTS ARE WE TO PARSE?
         parse_mock_events = self.settings["lvk"]["parse_mock_events"]
         parse_real_events = self.settings["lvk"]["parse_real_events"]
+
         if self.record['superevent_id'][0] == 'M' and not parse_mock_events:
             return
         if self.record['superevent_id'][0] != 'M' and not parse_real_events:
@@ -76,6 +77,15 @@ class lvk(object):
                 self.download_dir = self.download_dir.replace("~", home)
         else:
             self.download_dir = "."
+
+        self.mockDir = self.download_dir + "/mockevents/"
+        self.evertDir = self.download_dir + "/superevents/"
+        if parse_mock_events:
+            if not os.path.exists(self.mockDir):
+                os.makedirs(self.mockDir)
+        if parse_real_events:
+            if not os.path.exists(self.evertDir):
+                os.makedirs(self.evertDir)
 
         return None
 
@@ -99,9 +109,9 @@ class lvk(object):
         # RECURSIVELY CREATE MISSING DIRECTORIES
         alertTime = self.record["time_created"].replace("-", "").replace(":", "").replace(" ", "").replace("Z", "")
         if self.record["superevent_id"][0] == 'M':
-            alertDir = self.download_dir + "/mockevents/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
+            alertDir = self.mockDir + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
         else:
-            alertDir = self.download_dir + "/superevents/" + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
+            alertDir = self.evertDir + self.record["superevent_id"] + "/" + alertTime + "_" + self.record["alert_type"].lower()
         if not os.path.exists(alertDir):
             os.makedirs(alertDir)
 
