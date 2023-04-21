@@ -2,7 +2,7 @@ version: 1
 
 lvk:
     parse_mock_events: True
-    parse_real_events: False
+    parse_real_events: True
     download_dir: ~/lvk_events
     # CONVERT MAPS TO AITOFF PLOTS?
     aitoff:

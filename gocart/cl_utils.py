@@ -116,6 +116,37 @@ def main(arguments=None):
         print("Please add your gcn-kafka client ID and secret to the gocart.yaml settings file.")
         return
 
+    if a['listen'] or a['echo']:
+
+        if a['listen']:
+            verb = "Listening for"
+        else:
+            verb = "Echoing"
+
+        parse_mock_events = settings["lvk"]["parse_mock_events"]
+        parse_real_events = settings["lvk"]["parse_real_events"]
+        # WHERE TO DOWNLOAD MAPS TO
+        if "download_dir" in settings["lvk"] and settings["lvk"]["download_dir"]:
+            download_dir = settings["lvk"]["download_dir"]
+            # MAKE RELATIVE HOME PATH ABSOLUTE
+            from os.path import expanduser
+            home = expanduser("~")
+            if download_dir == "~":
+                download_dir = download_dir.replace("~", home)
+        else:
+            download_dir = "."
+
+        mockDir = download_dir + "/mockevents/"
+        evertDir = download_dir + "/superevents/"
+        if parse_mock_events:
+            print(f"{verb} Mockevents")
+            if not os.path.exists(mockDir):
+                os.makedirs(mockDir)
+        if parse_real_events:
+            print(f"{verb} Superevents")
+            if not os.path.exists(evertDir):
+                os.makedirs(evertDir)
+
     # CALL FUNCTIONS/OBJECTS
     if a['listen']:
         from gcn_kafka import Consumer
