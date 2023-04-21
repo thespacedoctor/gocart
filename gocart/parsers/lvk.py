@@ -81,9 +81,11 @@ class lvk(object):
         self.mockDir = self.download_dir + "/mockevents/"
         self.evertDir = self.download_dir + "/superevents/"
         if parse_mock_events:
+            print("Listening for Mockevents")
             if not os.path.exists(self.mockDir):
                 os.makedirs(self.mockDir)
         if parse_real_events:
+            print("Listening for Superevents")
             if not os.path.exists(self.evertDir):
                 os.makedirs(self.evertDir)
 
