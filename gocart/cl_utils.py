@@ -118,6 +118,11 @@ def main(arguments=None):
 
     if a['listen'] or a['echo']:
 
+        if a['listen']:
+            verb = "Listening for"
+        else:
+            verb = "Echoing"
+
         parse_mock_events = settings["lvk"]["parse_mock_events"]
         parse_real_events = settings["lvk"]["parse_real_events"]
         # WHERE TO DOWNLOAD MAPS TO
@@ -134,11 +139,11 @@ def main(arguments=None):
         mockDir = download_dir + "/mockevents/"
         evertDir = download_dir + "/superevents/"
         if parse_mock_events:
-            print("Listening for Mockevents")
+            print(f"{verb} Mockevents")
             if not os.path.exists(mockDir):
                 os.makedirs(mockDir)
         if parse_real_events:
-            print("Listening for Superevents")
+            print(f"{verb} Superevents")
             if not os.path.exists(evertDir):
                 os.makedirs(evertDir)
 
