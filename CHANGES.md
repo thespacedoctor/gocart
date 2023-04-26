@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.2.1 - April 26, 2023**  
+
+- **FIXED**: listen command was tripping up on mock-events
+
 **v0.2.0 - April 26, 2023**  
 
 - **FEATURE**: filtering of alerts is now possible via options in the settings file (see docs)  

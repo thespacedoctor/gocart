@@ -128,6 +128,14 @@ class lvk(object):
         import yaml
         import json
 
+        # WHICH EVENTS ARE WE TO PARSE?
+        parse_mock_events = self.settings["lvk"]["parse_mock_events"]
+        parse_real_events = self.settings["lvk"]["parse_real_events"]
+        if self.record['superevent_id'][0] == 'M' and not parse_mock_events:
+            return
+        if self.record['superevent_id'][0] != 'M' and not parse_real_events:
+            return
+
         print("\n----------------------------------------")
         if "event" in self.record and self.record["event"]:
             timeDelta = (Time(self.record["time_created"], scale='utc') - Time(self.record["event"]["time"], scale='utc')).to_value(unit='min')
