@@ -16,7 +16,7 @@
 
    Listen and Echo <listen_and_echo>
    File and Folders <files_and_folders>
-   Gocart Settings <settings>
+   Settings & Alert Filtering <settings>
 
    changes_link
 ```

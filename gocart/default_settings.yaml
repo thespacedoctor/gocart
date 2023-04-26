@@ -22,6 +22,23 @@ lvk:
     # WRITE ORIGINAL JSON ALERTS TO FILE?
     json: False
 
+    # UP FRONT FILTERING OF ALERTS. ONLY IF AN ALERT PASSES 1 OR MORE OF THESE FILTERS WILL THE ALERT (AND ASSOCIATED ASSETS) GET WRITTEN TO FILE
+    # AN ALERT MUST PASS ALL INDIVIDUAL CRITERIA WITHIN A FILTER TO PASS
+    # filters:
+    #     - name: general
+    #       alert_types: [initial, update, retraction]
+    #       ns_lower: 0.9
+    #       far_upper: 1.6e-08
+    #       dist_upper: 500
+    #       area90_upper: 2000
+    #     - name: high significance
+    #       alert_types: [initial, update, retraction]
+    #       ns_lower: 0.99
+    #       far_upper: 1.6e-10
+    #       dist_upper: 250
+    #       hasns_lower: 0.9
+    #       hasremnant_lower: 0.5
+
 # KAFKA CLIENT CREDENTIALS - https://gcn.nasa.gov/quickstart
 gcn-kafka:
     client_id: XXXX
