@@ -1,0 +1,10 @@
+{
+    "alert_type": "RETRACTION",
+    "time_created": "2023-04-25T13:02:09Z",
+    "superevent_id": "MS230425m",
+    "urls": {
+        "gracedb": "https://gracedb.ligo.org/superevents/MS230425m/view/"
+    },
+    "event": null,
+    "external_coinc": null
+}

@@ -42,11 +42,12 @@ if not os.path.exists(pathToOutputDir + "/lvk_events/"):
     os.makedirs(pathToOutputDir + "/lvk_events/")
 
 testAlerts = [
+    'MSBURST-initial.json',
     'MS181101ab-earlywarning.json',
     'MS181101ab-initial.json',
     'MS181101ab-preliminary.json',
     'MS181101ab-retraction.json',
-    'MS181101ab-update.json'
+    'MS181101ab-update.json',
 ]
 
 
@@ -70,6 +71,33 @@ class test_lvk(unittest.TestCase):
                 log=log,
                 record=record,
                 settings=settings
+            ).parse()
+
+    def test_lvk_filtering_function(self):
+
+        import copy
+        theseSettings = copy.copy(settings)
+        theseSettings["lvk"]["aitoff"]["convert"] = False
+        theseSettings["lvk"]["ascii_map"]["convert"] = False
+
+        # GENERATE A LIST OF FILE PATHS
+        testAlerts = []
+        pathToDirectory = pathToOutputDir + "/json_alerts"
+        for d in os.listdir(pathToDirectory):
+            filepath = os.path.join(pathToDirectory, d)
+            if os.path.isfile(filepath) and os.path.splitext(filepath)[1] == ".json":
+                testAlerts.append(filepath)
+
+        for a in testAlerts:
+            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
+            with open(a, 'r') as f:
+                record = f.read()
+
+            from gocart.parsers import lvk
+            parser = lvk(
+                log=log,
+                record=record,
+                settings=theseSettings
             ).parse()
 
     def test_lvk_function_exception(self):

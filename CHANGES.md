@@ -3,6 +3,9 @@
 
 <!-- **vx.x.x - xxdatexx** -->
 
+- **ENHANCEMENT** -- option added to write the original json alert to file
+- **ENHANCEMENT** -- gocart *should* be robust enough to handle burst events (tested against a hand crafted burst alert packet as none exist in the LVK Public Alert Guide yet).
+
 **v0.1.9 - April 19, 2023**
 
 - **REFACTOR** -- sun and moon footprints replace terminator

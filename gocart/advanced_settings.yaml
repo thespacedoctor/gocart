@@ -1,0 +1,23 @@
+version: 1
+
+lvk:
+    # DOWNLOAD MOCK EVENT ALERTS? USEFUL AS A HEARTBEAT MONITOR
+    parse_mock_events: True
+    # DOWNLOAD PRODUCTION EVENT ALERTS?
+    parse_real_events: False
+    # LOCATION TO DOWNLOAD EVENT ALERT AND MAPS TO
+    download_dir: ~/lvk_events
+    # CONVERT MAPS TO AITOFF PLOTS?
+    aitoff:
+        convert: True
+        sun_moon: True
+        # PLOT CONTOUR 33 DEG FROM SUN AND 20 DEG FROM MOON
+        sun_moon_contour: True
+        galactic_plane: True
+    # CONVERT MAP TO ASCII FILE - ONE ROW PER HEALPIX PIXEL
+    ascii_map:
+        convert: True
+        # THE SIZE OF HEALPIX PIXELS TO RESOLVE SKY TO. NSIDE = 64 IS ~0.84 deg2 PER PIXEL.
+        nside: 64
+    # WRITE ORIGINAL JSON ALERTS TO FILE?
+    json: False

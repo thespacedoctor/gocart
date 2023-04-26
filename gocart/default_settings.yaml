@@ -19,6 +19,8 @@ lvk:
         convert: True
         # THE SIZE OF HEALPIX PIXELS TO RESOLVE SKY TO. NSIDE = 64 IS ~0.84 deg2 PER PIXEL.
         nside: 64
+    # WRITE ORIGINAL JSON ALERTS TO FILE?
+    json: False
 
 # KAFKA CLIENT CREDENTIALS - https://gcn.nasa.gov/quickstart
 gcn-kafka:

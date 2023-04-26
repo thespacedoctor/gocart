@@ -271,7 +271,7 @@ class aitoff(object):
 
         if len(self.meta):
             data = ""
-            data += f"Event: {self.meta['ALERT']['superevent_id']}\n"
+            data += f"Event: {self.meta['ALERT']['superevent_id']} ({self.meta['ALERT']['event']['group']})\n"
             eventDate = Time(self.meta['HEADER']['DATE-OBS'], scale='utc').to_datetime().strftime("%Y-%m-%d %H:%M:%S")
             data += f"Event time: {eventDate}\n"
 
@@ -290,15 +290,18 @@ class aitoff(object):
             else:
                 data += f"FAR: 1 per {far:0.1f} days\n"
 
-            data += f"Dist: {self.meta['HEADER']['DISTMEAN']:.2f} (±{self.meta['HEADER']['DISTSTD']:.2f}) Mpc\n"
+            if 'DISTMEAN' in self.meta['HEADER']:
+                data += f"Dist: {self.meta['HEADER']['DISTMEAN']:.2f} (±{self.meta['HEADER']['DISTSTD']:.2f}) Mpc\n"
 
             data += "\n"
-            for k, v in self.meta['ALERT']['event']['classification'].items():
-                data += f"{k}: {v:.2f}\n"
+            if "classification" in self.meta['ALERT']['event']:
+                for k, v in self.meta['ALERT']['event']['classification'].items():
+                    data += f"{k}: {v:.2f}\n"
 
             data += "\n"
-            for k, v in self.meta['ALERT']['event']['properties'].items():
-                data += f"{k}: {v:.2f}\n"
+            if "properties" in self.meta['ALERT']['event']:
+                for k, v in self.meta['ALERT']['event']['properties'].items():
+                    data += f"{k}: {v:.2f}\n"
 
             plt.text(3.42, 0.2, data, ha='left', va='top', fontsize=5, linespacing=1.8)
 
