@@ -4,7 +4,10 @@
 <!-- **vx.x.x - xxdatexx** -->
 
 - **ENHANCEMENT** -- option added to write the original json alert to file
+**v0.1.10 - April 21, 2023**
+
 - **ENHANCEMENT** -- gocart *should* be robust enough to handle burst events (tested against a hand crafted burst alert packet as none exist in the LVK Public Alert Guide yet).
+- **REFACTOR** -- splitting mockevents from superevents
 
 **v0.1.9 - April 19, 2023**
 
