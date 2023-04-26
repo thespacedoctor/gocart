@@ -1,7 +1,7 @@
 
 ## Release Notes
 
-<!-- **vx.x.x - xxdatexx** -->
+**v0.2.0 - April 26, 2023**  
 
 - **FEATURE**: filtering of alerts is now possible via options in the settings file (see docs)  
 - **ENHANCEMENT**: option added to write the original json alert to file  
