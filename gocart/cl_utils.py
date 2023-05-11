@@ -170,13 +170,18 @@ def main(arguments=None):
             # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
             if firstConnect:
                 count = 0
-                print("Marking previous messages as read, this can take a few minutes ...")
+                index = 1
+                print("Marking previous messages as read, this can take a few minutes")
                 while more:
-                    messages = consumer.consume(num_messages=300, timeout=10)
-
+                    messages = consumer.consume(num_messages=300, timeout=5)
                     for message in messages:
                         count += 1
                         consumer.commit(message)
+                    if index > 1:
+                        # Cursor up one line and clear line
+                        sys.stdout.write("\x1b[1A\x1b[2K")
+                    index += 1
+                    print(f"{count} messages read ...")
                     if not len(messages):
                         more = False
 
