@@ -1,6 +1,8 @@
 
 ## Release Notes
 
+- **ENHANCEMENT**: added a count of alerts read when first connected to kafka (gives users peace of mind that goacrt is working)
+
 **v0.2.1 - April 26, 2023**  
 
 - **FIXED**: listen command was tripping up on mock-events
