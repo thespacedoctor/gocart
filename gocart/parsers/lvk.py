@@ -261,7 +261,7 @@ class lvk(object):
             from os.path import expanduser
             home = expanduser("~")
             # GENERATE A LIST OF FILE PATHS
-            pathToDirectory = home + "./config/gocart/plugins"
+            pathToDirectory = home + "/.config/gocart/plugins"
             for d in os.listdir(pathToDirectory):
                 filepath = os.path.join(pathToDirectory, d)
                 if os.path.isfile(filepath) and d[:3] == "gp_":
