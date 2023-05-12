@@ -193,7 +193,7 @@ def main(arguments=None):
                     log=log,
                     record=message.value(),
                     settings=settings,
-                    plugins=a["pluginFlag"]
+                    plugins=a["pluginsFlag"]
                 ).parse()
                 consumer.commit(message)
 
@@ -225,7 +225,7 @@ def main(arguments=None):
                     log=log,
                     record=message.value(),
                     settings=settings,
-                    plugins=a["pluginFlag"]
+                    plugins=a["pluginsFlag"]
                 ).parse()
             if not len(messages):
                 more = False
