@@ -26,6 +26,7 @@ class lvk(object):
         - ``log`` -- logger
         - ``settings`` -- the settings dictionary
         - ``record`` -- the kafka record to parse.
+        - ``plugins`` -- run the plugin script found in `~/.config/gocart/plugins` every time an alert is read
 
     **Usage:**
 
@@ -38,7 +39,8 @@ class lvk(object):
     parser = lvk(
         log=log,
         record=record,
-        settings=settings
+        settings=settings,
+        plugins=True
     ).parse()
     ```
 
@@ -49,6 +51,7 @@ class lvk(object):
             log,
             record,
             settings=False,
+            plugins=False
 
     ):
         import json
@@ -57,6 +60,7 @@ class lvk(object):
         log.debug("instansiating a new 'lvk' object")
         self.settings = settings
         self.record = json.loads(record)
+        self.plugins = plugins
 
         import inspect
         import yaml
@@ -127,6 +131,8 @@ class lvk(object):
         from datetime import datetime
         import yaml
         import json
+
+        print(self.plugins)
 
         # WHICH EVENTS ARE WE TO PARSE?
         parse_mock_events = self.settings["lvk"]["parse_mock_events"]

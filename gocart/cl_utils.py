@@ -5,8 +5,8 @@ Documentation for gocart can be found here: http://gocart.readthedocs.org
 
 Usage:
     gocart init
-    gocart echo <daysAgo> [-s <pathToSettingsFile>]
-    gocart listen [-s <pathToSettingsFile>]
+    gocart [-p] echo <daysAgo> [-s <pathToSettingsFile>]
+    gocart [-p] listen [-s <pathToSettingsFile>]
 
 
 Options:
@@ -16,6 +16,7 @@ Options:
 
     -h, --help                             show this help message
     -v, --version                          show version
+    -p, --plugins                          execute plugins everytime an alert is read
     -s, --settings <pathToSettingsFile>    the settings file
     -t, --test                             test, only collect 1 map
 """
@@ -191,7 +192,8 @@ def main(arguments=None):
                 parser = lvk(
                     log=log,
                     record=message.value(),
-                    settings=settings
+                    settings=settings,
+                    plugins=a["pluginFlag"]
                 ).parse()
                 consumer.commit(message)
 
@@ -222,7 +224,8 @@ def main(arguments=None):
                 parser = lvk(
                     log=log,
                     record=message.value(),
-                    settings=settings
+                    settings=settings,
+                    plugins=a["pluginFlag"]
                 ).parse()
             if not len(messages):
                 more = False
