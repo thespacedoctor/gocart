@@ -132,8 +132,6 @@ class lvk(object):
         import yaml
         import json
 
-        print(self.plugins)
-
         # WHICH EVENTS ARE WE TO PARSE?
         parse_mock_events = self.settings["lvk"]["parse_mock_events"]
         parse_real_events = self.settings["lvk"]["parse_real_events"]
@@ -258,6 +256,17 @@ class lvk(object):
                     galacticPlane=self.settings["lvk"]["aitoff"]["galactic_plane"],
                     sunmoonContour=self.settings["lvk"]["aitoff"]["sun_moon_contour"],
                     sunmoon=self.settings["lvk"]["aitoff"]["sun_moon"])
+
+        if self.plugins:
+            from os.path import expanduser
+            home = expanduser("~")
+            filepath = filepath.replace("~", home)
+            # GENERATE A LIST OF FILE PATHS
+            pathToDirectory = home + "./config/gocart/plugins"
+            for d in os.listdir(pathToDirectory):
+                filepath = os.path.join(pathToDirectory, d)
+                if os.path.isfile(filepath) and d[:3] = "gp_":
+                    print(d)
 
         self.log.debug('completed the ``parse`` method')
         return lvk
