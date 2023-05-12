@@ -260,7 +260,6 @@ class lvk(object):
         if self.plugins:
             from os.path import expanduser
             home = expanduser("~")
-            filepath = filepath.replace("~", home)
             # GENERATE A LIST OF FILE PATHS
             pathToDirectory = home + "./config/gocart/plugins"
             for d in os.listdir(pathToDirectory):
