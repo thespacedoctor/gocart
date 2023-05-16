@@ -259,13 +259,20 @@ class lvk(object):
 
         if self.plugins:
             from os.path import expanduser
+            from subprocess import Popen, PIPE, STDOUT
             home = expanduser("~")
             # GENERATE A LIST OF FILE PATHS
             pathToDirectory = home + "/.config/gocart/plugins"
             for d in os.listdir(pathToDirectory):
                 filepath = os.path.join(pathToDirectory, d)
                 if os.path.isfile(filepath) and d[:3] == "gp_":
-                    print(d)
+                    cmd = f"""/usr/bin/env python {filepath} {alertDir}"""
+                    try:
+                        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+                        stdout, stderr = p.communicate()
+                        print(stdout)
+                    except Exception as e:
+                        self.log.error(f'cound not execute the {d} plugin. Failed with error: {e}')
 
         self.log.debug('completed the ``parse`` method')
         return lvk
