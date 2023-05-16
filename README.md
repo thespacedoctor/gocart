@@ -26,6 +26,7 @@ Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs
 - Ability to 'echo' the Kafka stream by re-listening to the last N days of alerts (provided the alerts are still hosted on the GCN Kafka cluster).
 - Alert content, FITS Header data and some extra value-added event parameters are written to a single machine-readable YAML file.
 - The healpix skymaps are optionally converted to ascii files (one row per healpix pixel) and/or rendered as aitoff plots.
+- Create your own plugin scripts to run whenever an alert is parsed.
 
 
 ## Installation
