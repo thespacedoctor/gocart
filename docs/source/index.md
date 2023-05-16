@@ -17,6 +17,7 @@
    Listen and Echo <listen_and_echo>
    File and Folders <files_and_folders>
    Settings & Alert Filtering <settings>
+   Plugins <plugins>
 
    changes_link
 ```
