@@ -28,6 +28,7 @@ import glob
 import readline
 import sys
 import os
+import shutil
 os.environ['TERM'] = 'vt100'
 
 
@@ -94,22 +95,16 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
+    # TEST IF PLUG FOLDER EXISTS
+    pluginPath = home + "/.config/gocart/plugins"
+    exists = os.path.exists(pluginPath)
+    if not exists:
+        shutil.copytree(os.path.dirname(__file__) + "/resources/plugins", pluginPath)
+
     if a["init"]:
         from os.path import expanduser
         home = expanduser("~")
         filepath = home + "/.config/gocart/gocart.yaml"
-
-        try:
-            cmd = """open %(filepath)s""" % locals()
-            p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
-        except:
-            pass
-        try:
-            cmd = """start %(filepath)s""" % locals()
-            p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
-        except:
-            pass
-        return
 
     topic = 'igwn.gwalert'
 
