@@ -267,6 +267,7 @@ class lvk(object):
                 filepath = os.path.join(pathToDirectory, d)
                 if os.path.isfile(filepath) and d[:3] == "gp_":
                     cmd = f"""/usr/bin/env python {filepath} {alertDir}"""
+                    print(f"PLUGIN: {d}")
                     try:
                         p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
                         stdout, stderr = p.communicate()
