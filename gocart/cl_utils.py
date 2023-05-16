@@ -96,6 +96,8 @@ def main(arguments=None):
         (startTime,))
 
     # TEST IF PLUG FOLDER EXISTS
+    from os.path import expanduser
+    home = expanduser("~")
     pluginPath = home + "/.config/gocart/plugins"
     exists = os.path.exists(pluginPath)
     if not exists:
