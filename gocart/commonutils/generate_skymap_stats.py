@@ -56,7 +56,7 @@ def generate_skymap_stats(
     tableData['AREA'] = ah.nside_to_pixel_area(tableData['NSIDE']).to_value(u.deg**2)
 
     # SORT BY PROB, CALCULATE CUMULATIVE PROB AND RESORT BY INDEX
-    tableData.sort_values(["PROB"],
+    tableData.sort_values(["PROBDENSITY"],
                           ascending=[False], inplace=True)
     tableData["CUMPROB"] = np.cumsum(tableData['PROB'])
 
@@ -68,6 +68,8 @@ def generate_skymap_stats(
     area50 = tableData.loc[mask, 'AREA'].sum()
     mask = (tableData["CUMPROB"] < 0.1)
     area10 = tableData.loc[mask, 'AREA'].sum()
+    mask = (tableData["CUMPROB"] < 0.99999999999999)
+    area100 = tableData['AREA'].sum()
 
     area90 = float(f'{area90:.3f}')
     area50 = float(f'{area50:.3f}')

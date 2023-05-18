@@ -103,7 +103,11 @@ class ascii(object):
             pass
 
         # CREATE HEADER FOR FILE
-        header = f"# EVENT:{self.table.meta['objid']}\n"
+        try:
+            header = f"# EVENT:{self.table.meta['objid']}\n"
+        except:
+            eventId = self.mapPath.split("/")[-3]
+            header = f"# EVENT:{eventId}\n"
         header += f"# NSIDE:{self.nside}\n"
 
         tableData.index.names = ['IPIX']

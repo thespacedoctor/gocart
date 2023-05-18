@@ -245,7 +245,7 @@ class aitoff(object):
             handles.append(line)
 
         if contours:
-            mapDF.sort_values(["PROB"],
+            mapDF.sort_values(["PROBDENSITY"],
                               ascending=[False], inplace=True)
             mapDF["CUMPROB"] = np.cumsum(mapDF['PROB'])
             mapDF["CUMPROB"] = mapDF["CUMPROB"] * 100. * mapDF["PROB"].sum()
