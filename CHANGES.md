@@ -1,8 +1,12 @@
 
 ## Release Notes
 
-- **FEATURE**: used can now add their own plugin scripts to run every time an alert is parsed
-- **ENHANCEMENT**: added a count of alerts read when first connected to kafka (gives users peace of mind that goacrt is working)
+**v0.3.0 - May 18, 2023**  
+
+- **FEATURE**: user can now add their own plugin scripts to run every time an alert is parsed  
+- **ENHANCEMENT**: added a count of alerts read when first connected to kafka (gives users peace of mind that goacrt is working)  
+- **FIXED**: area calulations fixed (I was still sort by prob but should have been sorting by probdensity for mulit-order maps)  
+- **FIXED**: can still read an event ID even if not found in the sky-map header (tried to find the event ID from the map directory path)  
 
 **v0.2.1 - April 26, 2023**  
 
