@@ -13,7 +13,7 @@ def readme():
 install_requires = [
     'pyyaml',
     'fundamentals',
-    'astropy==5.1.0',
+    'astropy',
     'astropy-healpix',
     'numpy',
     'matplotlib',
