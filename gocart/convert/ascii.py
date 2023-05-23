@@ -59,7 +59,7 @@ class ascii(object):
         self.mapPath = mapPath
         self.nside = nside
 
-        self.hdus, self.table = flatten_healpix_map(
+        self.table = flatten_healpix_map(
             log=log,
             mapPath=self.mapPath,
             nside=self.nside
@@ -84,7 +84,7 @@ class ascii(object):
         import astropy_healpix as ah
         from astropy.coordinates import SkyCoord
 
-        tableData = self.table.to_pandas()
+        tableData = self.table
 
         # CREATE RA AND DEC COLUMNS
         ra, dec = ah.healpix_to_lonlat(tableData.index, 64, order='nested')

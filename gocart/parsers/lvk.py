@@ -272,8 +272,10 @@ class lvk(object):
                         p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
                         stdout, stderr = p.communicate()
                         print(stdout.decode('utf-8'))
+                        if stderr:
+                            print(f"could not execute the {d} plugin. Failed with error: {stderr.decode('utf-8')}")
                     except Exception as e:
-                        self.log.error(f'cound not execute the {d} plugin. Failed with error: {e}')
+                        self.log.error(f'could not execute the {d} plugin. Failed with error: {e}')
 
         self.log.debug('completed the ``parse`` method')
         return lvk

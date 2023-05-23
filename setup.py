@@ -20,7 +20,6 @@ install_requires = [
     'healpy',
     'pandas',
     'tabulate',
-    'ligo.skymap',
     'gcn-kafka'
 ]
 

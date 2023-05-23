@@ -73,6 +73,21 @@ class test_lvk(unittest.TestCase):
                 settings=settings
             ).parse()
 
+    def test_lvk_plugins_function(self):
+
+        for a in testAlerts[2:3]:
+            # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
+            with open(f'{pathToInputDir}/{a}', 'r') as f:
+                record = f.read()
+
+            from gocart.parsers import lvk
+            parser = lvk(
+                log=log,
+                record=record,
+                settings=settings,
+                plugins=True
+            ).parse()
+
     def test_lvk_filtering_function(self):
 
         import copy
