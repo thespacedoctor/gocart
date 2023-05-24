@@ -3,7 +3,10 @@
 
 **0.4.0 - May 24, 2023**
 
-- **FEATURE**: gocart can now run in daemon mode. Use the commands `gocart listen|quit|restart|status`.
+- **FEATURE**: gocart can now run in daemon mode. Use the commands `gocart listen|quit|restart|status`   
+- **ENHANCEMENT**: added an `event_dir_exist` parameter to the filtering criteria. If a previous event alert has passed the filtering criteria, it is now possible to allow all subsequent alerts will pass   
+- **ENHANCEMENT**: redshift range added to the right side of aitoff plots  
+- **REFACTOR**: removed `ligo.skymap` dependency as this is a huge package and was causing upgrades of gocart to take 20-40 mins. Required new code to convert multi-order skymaps to a single-order (I was previously relying on a function in `ligo.skymap` to do this)  
 
 **v0.3.0 - May 18, 2023**  
 
