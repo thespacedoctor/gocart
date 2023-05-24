@@ -6,11 +6,13 @@ Once your credentials have been added to the `gocart.yaml` file, you are ready t
 gocart listen
 ```
 
-That's it. The listener will remain open and download new events and alerts as they are added to the Kafka stream in real-time. If you are parsing the test/mock events (see the `parse_mock_events` setting), you will collect a set of event alerts every ~1hr.
+That's it. The listener will run in daemon mode (running as a background task) and download new events and alerts as they are added to the Kafka stream in real-time. If you are parsing the test/mock events (see the `parse_mock_events` setting), you will collect a set of event alerts every ~1hr.
+
+You can check on the status of the listener with `gocart status`. This will tell you if the listener is running or not.
+
+To stop the listener run `gocart stop`, or to restart run `gocart restart`.
 
 If you stop the listener or it falls over for some reason, once you reconnect it will download any event-alerts you missed in the interim. 
-
-To quit the listener use the keystroke `ctrl \`.
 
 To relisten the event alerts from the last few days you can run the `echo` command. To request the last 3 days of alerts run the command:
 

@@ -38,6 +38,8 @@ lvk:
     #       dist_upper: 250
     #       hasns_lower: 0.9
     #       hasremnant_lower: 0.5
+    #     - name: live event
+    #       event_dir_exist: True
 
 # KAFKA CLIENT CREDENTIALS - https://gcn.nasa.gov/quickstart
 gcn-kafka:
