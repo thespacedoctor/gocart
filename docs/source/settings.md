@@ -40,6 +40,8 @@ lvk:
           dist_upper: 250
           hasns_lower: 0.9
           hasremnant_lower: 0.5
+        - name: live event
+          event_dir_exist: True
 ```
 
 ## Alert Filtering
@@ -53,6 +55,7 @@ Within the settings file, you have the option to write 'filters'. An alert comin
 - `area90_upper`: an upper limit to the sky-area containing the 90% credibility region of the event (square degrees).
 - `hasns_lower`: a lower limit for the `HasNS` property.
 - `hasremnant_lower`: a lower limit for the `HasRemnant` property.
+- `event_dir_exist`: the event directory already exists, i.e. a previous alert passed the filtering criteria.
 
 When running gocart in listen or echo mode, the status of the alert's filter pass or fail state will be reported.
 
