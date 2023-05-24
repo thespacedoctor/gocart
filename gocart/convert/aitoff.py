@@ -292,6 +292,12 @@ class aitoff(object):
 
             if 'DISTMEAN' in self.meta['HEADER']:
                 data += f"Dist: {self.meta['HEADER']['DISTMEAN']:.2f} (±{self.meta['HEADER']['DISTSTD']:.2f}) Mpc\n"
+                ho = 67
+                zlow = (ho * (self.meta['HEADER']['DISTMEAN'] - self.meta['HEADER']['DISTSTD'])) / 3e5
+                zhigh = (ho * (self.meta['HEADER']['DISTMEAN'] + self.meta['HEADER']['DISTSTD'])) / 3e5
+                if zlow < 0:
+                    zlow = 0
+                data += f"Redshift: {zlow:0.2}<z<{zhigh:0.2}\n"
 
             data += "\n"
             if "classification" in self.meta['ALERT']['event']:

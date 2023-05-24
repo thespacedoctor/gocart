@@ -6,7 +6,7 @@ Documentation for gocart can be found here: http://gocart.readthedocs.org
 Usage:
     gocart init
     gocart [-p] echo <daysAgo> [-s <pathToSettingsFile>]
-    gocart [-p] listen [-s <pathToSettingsFile>]
+    gocart [-p] (listen|quit|restart|status) [-s <pathToSettingsFile>]
 
 
 Options:
@@ -145,54 +145,96 @@ def main(arguments=None):
             if not os.path.exists(evertDir):
                 os.makedirs(evertDir)
 
-    # CALL FUNCTIONS/OBJECTS
-    if a['listen']:
-        from gcn_kafka import Consumer
-        from confluent_kafka import TopicPartition
-        from gocart.parsers import lvk
+    if a['listen'] or a["quit"] or a["status"] or a["restart"]:
 
-        config = {
-            'group.id': settings["gcn-kafka"]["group_id"],
-            'enable.auto.commit': False,
-            'auto.offset.reset': 'earliest'
-        }
+        # ADD SOMETHING LIKE THE FOLLOWING TO THE CL USAGE:
+        """
+        Usage:
+            myCommand (start|stop|restart|status)
 
-        consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
-                            client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
-        consumer.subscribe([topic])
+            Options:
+                start                 start the myCommand daemon
+                stop                  stop the myCommand daemon
+                restart               restart the myCommand daemon
+                status                print the staus of the myCommand daemon
+        """
 
-        stop = False
-        test = 0
-        more = True
-        while not stop:
-            # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
-            if firstConnect:
-                count = 0
-                index = 1
-                print("Marking previous messages as read, this can take a few minutes")
-                while more:
-                    messages = consumer.consume(num_messages=300, timeout=5)
-                    for message in messages:
-                        count += 1
+        from fundamentals import daemonise
+
+        class myDaemon(daemonise):
+            def action(
+                    self,
+                    **kwargs):
+                self.log.info('starting the ``action`` method')
+
+                from gcn_kafka import Consumer
+                from confluent_kafka import TopicPartition
+                from gocart.parsers import lvk
+
+                firstConnect = kwargs["firstConnect"]
+
+                from datetime import datetime, date, time
+                now = datetime.now()
+                now = now.strftime("%Y%m%dt%H%M%S")
+
+                print(f"gocart listen started at {now}")
+
+                config = {
+                    'group.id': settings["gcn-kafka"]["group_id"],
+                    'enable.auto.commit': False,
+                    'auto.offset.reset': 'earliest'
+                }
+
+                consumer = Consumer(config=config, client_id=settings['gcn-kafka']['client_id'],
+                                    client_secret=settings['gcn-kafka']['client_secret'], domain='gcn.nasa.gov')
+                consumer.subscribe([topic])
+
+                stop = False
+                test = 0
+                more = True
+                while not stop:
+                    # IF FISRT TIME CONNECTING THEN SKIP MESSAGES
+                    if firstConnect:
+                        count = 0
+                        index = 1
+                        print("Marking previous messages as read, this can take a few minutes")
+                        while more:
+                            messages = consumer.consume(num_messages=300, timeout=5)
+                            for message in messages:
+                                count += 1
+                                consumer.commit(message)
+                            if index > 1:
+                                # Cursor up one line and clear line
+                                sys.stdout.write("\x1b[1A\x1b[2K")
+                            index += 1
+                            print(f"{count} messages read ...")
+                            if not len(messages):
+                                more = False
+
+                        firstConnect = False
+                        print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
+                    for message in consumer.consume(timeout=1):
+                        parser = lvk(
+                            log=log,
+                            record=message.value(),
+                            settings=settings,
+                            plugins=a["pluginsFlag"]
+                        ).parse()
                         consumer.commit(message)
-                    if index > 1:
-                        # Cursor up one line and clear line
-                        sys.stdout.write("\x1b[1A\x1b[2K")
-                    index += 1
-                    print(f"{count} messages read ...")
-                    if not len(messages):
-                        more = False
 
-                firstConnect = False
-                print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
-            for message in consumer.consume(timeout=1):
-                parser = lvk(
-                    log=log,
-                    record=message.value(),
-                    settings=settings,
-                    plugins=a["pluginsFlag"]
-                ).parse()
-                consumer.commit(message)
+                self.log.info('completed the ``action`` method')
+                return None
+
+        d = myDaemon(log=log, name="gocart", firstConnect=firstConnect)
+
+        if a['listen']:
+            d.start()
+        elif a['quit']:
+            d.stop()
+        elif a['restart']:
+            d.restart()
+        elif a['status']:
+            d.status()
 
     if a['echo'] and a['daysAgo']:
         # GET MESSAGES OCCURRING IN LAST N DAYS

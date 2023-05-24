@@ -75,10 +75,12 @@ def flatten_healpix_map(
     # MAKE A NEW DATAFRAME WITH IPIX64, UNIQ
     # MATCH EACH NEW UNIQ AGAIN ORIGINAL FRAME UNIQ TO GENERATE DATA FOR IPIX^$ FRAME
     mask = tableData['NSIDE'] <= nside
-    upTable = tableData.loc[mask]
+    upTable = tableData.loc[mask].copy()
+    upTable.reset_index(inplace=True)
     this = uniq2range(nside, upTable['UNIQ'])
     upTable[f'IPIX{nside}'] = [list(range(i, j)) for i, j in zip(this[0], this[1])]
     upTable[f'UNIQLIST'] = upTable.apply(lambda x: [x['UNIQ']] * len(x[f'IPIX{nside}']), axis=1)
+
     ipixNside = np.concatenate(upTable[f'IPIX{nside}'])
     uniqList = np.concatenate(upTable[f'UNIQLIST'])
     # CREATE DATA FRAME FROM A DICTIONARY OF LISTS
@@ -96,7 +98,8 @@ def flatten_healpix_map(
 
     # DOWNSAMPLE TABLE
     mask = tableData['NSIDE'] > nside
-    downTable = tableData.loc[mask]
+    downTable = tableData.loc[mask].copy()
+    downTable.reset_index(inplace=True)
 
     # FIND THE PIXEL INDEX AT ORDER NSIDE
     downTable[f'IPIX{nside}'] = np.floor_divide(tableData.loc[mask, 'IPIX'], np.power(4, (tableData.loc[mask, 'LEVEL'].values - level)))

@@ -20,7 +20,8 @@ install_requires = [
     'healpy',
     'pandas',
     'tabulate',
-    'gcn-kafka'
+    'gcn-kafka',
+    'mhealpy'
 ]
 
 # READ THE DOCS SERVERS
