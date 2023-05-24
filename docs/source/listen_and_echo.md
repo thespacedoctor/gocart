@@ -10,7 +10,7 @@ That's it. The listener will run in daemon mode (running as a background task) a
 
 You can check on the status of the listener with `gocart status`. This will tell you if the listener is running or not.
 
-To stop the listener run `gocart stop`, or to restart run `gocart restart`.
+To stop the listener run `gocart quit`, or to restart run `gocart restart`.
 
 If you stop the listener or it falls over for some reason, once you reconnect it will download any event-alerts you missed in the interim. 
 

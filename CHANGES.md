@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**0.4.0 - May 24, 2023**
+
+- **FEATURE**: gocart can now run in daemon mode. Use the commands `gocart listen|quit|restart|status`.
+
 **v0.3.0 - May 18, 2023**  
 
 - **FEATURE**: user can now add their own plugin scripts to run every time an alert is parsed  
