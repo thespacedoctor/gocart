@@ -7,6 +7,7 @@
 [![](https://img.shields.io/conda/vn/conda-forge/gocart)](https://anaconda.org/conda-forge/gocart)
 [![](https://pepy.tech/badge/gocart)](https://pepy.tech/project/gocart)
 [![](https://img.shields.io/github/license/thespacedoctor/gocart)](https://github.com/thespacedoctor/gocart)
+[![DOI](https://zenodo.org/badge/614846695.svg)](https://zenodo.org/badge/latestdoi/614846695)
 
 <!-- STATUS BADGES -->  
 
