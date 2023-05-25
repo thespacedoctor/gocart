@@ -1,6 +1,6 @@
 # gocart
 
-[![DOI](https://zenodo.org/badge/614846695.svg)](https://zenodo.org/badge/latestdoi/614846695)  
+[![](https://zenodo.org/badge/614846695.svg)](https://zenodo.org/badge/latestdoi/614846695)  
 
 <!-- INFO BADGES -->  
 
