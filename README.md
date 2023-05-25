@@ -99,7 +99,7 @@ You are now ready to start using gocart.
 
 ## How to cite gocart
 
-If you use `gocart` in your work, please cite using the following: 
+If you use `gocart` in your work, please cite using the following BibTeX entry: 
 
 ```bibtex
 @software{Young_gocart,
