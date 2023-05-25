@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.1 - May 25, 2023**
+
+- **FIXED**: a bug in filtering routine that caused alerts to pass the filtering algorithm if an unknown parameter in the filtering settings was found. It now fails by default instead of passing.
+
 **0.4.0 - May 24, 2023**
 
 - **FEATURE**: gocart can now run in daemon mode. Use the commands `gocart listen|quit|restart|status`   
