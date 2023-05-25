@@ -1,5 +1,7 @@
 # gocart
 
+[![DOI](https://zenodo.org/badge/614846695.svg)](https://zenodo.org/badge/latestdoi/614846695)  
+
 <!-- INFO BADGES -->  
 
 [![](https://img.shields.io/pypi/pyversions/gocart)](https://pypi.org/project/gocart/)
@@ -7,6 +9,7 @@
 [![](https://img.shields.io/conda/vn/conda-forge/gocart)](https://anaconda.org/conda-forge/gocart)
 [![](https://pepy.tech/badge/gocart)](https://pepy.tech/project/gocart)
 [![](https://img.shields.io/github/license/thespacedoctor/gocart)](https://github.com/thespacedoctor/gocart)
+
 
 <!-- STATUS BADGES -->  
 
