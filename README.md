@@ -97,4 +97,16 @@ Don't worry about the `group_id` parameter, it's initially set to XXXX but gocar
 
 You are now ready to start using gocart.
 
+## How to cite gocart
 
+If you use `gocart` in your work, please cite using the following: 
+
+```bibtex
+@software{Young_gocart,
+author = {Young, David R.},
+doi = {10.5281/zenodo.7970743},
+license = {GPL-3.0-only},
+title = {{gocart}},
+url = {https://github.com/thespacedoctor/gocart}
+}
+```
