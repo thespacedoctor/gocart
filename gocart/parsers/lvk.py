@@ -304,6 +304,18 @@ class lvk(object):
 
             passing = True
             message = []
+
+            matchingCriteria = [
+                'alert_types',
+                "ns_lower",
+                "far_upper",
+                "dist_upper",
+                "area90_upper",
+                "hasns_lower",
+                "hasremnant_lower",
+                "event_dir_exits"
+            ]
+
             if 'alert_types' in f and not alert['ALERT']['alert_type'].lower() in f['alert_types']:
                 passing = False
                 message.append(f"Alert type is {alert['ALERT']['alert_type'].lower()}")
@@ -332,7 +344,12 @@ class lvk(object):
                     eventDir = self.eventDir + self.record["superevent_id"]
                 if not os.path.exists(eventDir):
                     passing = False
-                    message.append(f"The event has never passed the filtering criteria")
+                    message.append(f"The event has not previously passed the filtering criteria")
+
+            for k, v in f.items():
+                if k not in matchingCriteria and k != "name":
+                    passing = False
+                    message.append(f"Unrecognised filtering criterion '{k}'")
 
             filterResults.append(passing)
 
