@@ -1,28 +1,13 @@
-# This CITATION.cff file was generated with cffinit.
-# Visit https://bit.ly/cffinit to generate yours today!
-
 cff-version: 1.2.0
 title: gocart
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
-type: software
+message: If you use this software, please cite it as below.
 authors:
-  - given-names: David
-    name-particle: R.
-    family-names: Young
-    name-suffix: Dr.
-    email: d.r.young@qub.ac.uk
-    affiliation: Queen's University Belfast
-    orcid: 'https://orcid.org/0000-0002-1229-2499'
-identifiers:
-  - type: doi
-    value: 10.5281/zenodo.7970743
-repository-code: 'https://github.com/thespacedoctor/gocart'
-url: 'https://gocart.readthedocs.io'
-abstract: >-
-  gocart is a python package and command-line suite used to
-  consume GCN Kafka streams.
+- family-names: "David R."
+  given-names: "Young"
+  orcid: "https://orcid.org/0000-0002-1229-2499"
+doi: 10.5281/zenodo.7970743
+url: "https://github.com/thespacedoctor/gocart"
+abstract: gocart is a python package and command-line suite used to consume GCN Kafka streams.
 keywords:
   - astronomy
 license: GPL-3.0-only
