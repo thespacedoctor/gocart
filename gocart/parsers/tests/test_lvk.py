@@ -75,7 +75,7 @@ class test_lvk(unittest.TestCase):
 
     def test_lvk_plugins_function(self):
 
-        for a in testAlerts[2:3]:
+        for a in testAlerts:
             # READ THE FILE TO MEMORY (LIKE ALERT STREAM)
             with open(f'{pathToInputDir}/{a}', 'r') as f:
                 record = f.read()

@@ -172,6 +172,7 @@ def main(arguments=None):
                 from gocart.parsers import lvk
 
                 firstConnect = kwargs["firstConnect"]
+                pluginsFlag = kwargs["pluginsFlag"]
 
                 from datetime import datetime, date, time
                 now = datetime.now()
@@ -218,14 +219,14 @@ def main(arguments=None):
                             log=log,
                             record=message.value(),
                             settings=settings,
-                            plugins=a["pluginsFlag"]
+                            plugins=pluginsFlag
                         ).parse()
                         consumer.commit(message)
 
                 self.log.info('completed the ``action`` method')
                 return None
 
-        d = myDaemon(log=log, name="gocart", firstConnect=firstConnect)
+        d = myDaemon(log=log, name="gocart", firstConnect=firstConnect, pluginsFlag=a["pluginsFlag"])
 
         if a['listen']:
             d.start()

@@ -313,7 +313,7 @@ class lvk(object):
                 "area90_upper",
                 "hasns_lower",
                 "hasremnant_lower",
-                "event_dir_exits"
+                "event_dir_exists"
             ]
 
             if 'alert_types' in f and not alert['ALERT']['alert_type'].lower() in f['alert_types']:
@@ -337,7 +337,7 @@ class lvk(object):
             if "hasremnant_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and not alert['ALERT']['event']['properties']['HasRemnant'] >= f["hasremnant_lower"]:
                 passing = False
                 message.append(f"HasRemnant = {alert['ALERT']['event']['properties']['HasRemnant']} (< {f['hasremnant_lower']})")
-            if "event_dir_exits" in f:
+            if "event_dir_exists" in f:
                 if self.record["superevent_id"][0] == 'M':
                     eventDir = self.mockDir + self.record["superevent_id"]
                 else:
