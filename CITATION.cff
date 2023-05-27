@@ -8,6 +8,5 @@ authors:
 doi: 10.5281/zenodo.7970743
 url: "https://github.com/thespacedoctor/gocart"
 abstract: gocart is a python package and command-line suite used to consume GCN Kafka streams.
-keywords:
-  - astronomy
+keywords: [astronomy, map]
 license: GPL-3.0-only
