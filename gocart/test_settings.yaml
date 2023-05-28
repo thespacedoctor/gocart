@@ -22,6 +22,9 @@ lvk:
     # UP FRONT FILTERING OF ALERTS. ONLY IF AN ALERT PASSES 1 OR MORE OF THESE FILTERS WILL THE ALERT (AND ASSOCIATED ASSETS) GET WRITTEN TO FILE
     # AN ALERT MUST PASS ALL INDIVIDUAL CRITERIA WITHIN A FILTER TO PASS
     filters:
+        - name: burst
+          alert_types: [initial, update]
+          burst: True
         - name: general
           alert_types: [initial, update]
           ns_lower: 0.9
@@ -36,7 +39,7 @@ lvk:
           hasns_lower: 0.9
           hasremnant_lower: 0.5
         - name: live event
-          event_dir_exist: True
+          event_dir_exists: True
 
 
 gcn-kafka:

@@ -215,13 +215,16 @@ def main(arguments=None):
                         firstConnect = False
                         print(f"This is your first time using the listen command. gocart will now listen for all new incoming alerts (skipping the {count} previous alerts currently in this topic). If you stop listening and restart sometime later, gocart will immediately collect all alerts missed while off-line.")
                     for message in consumer.consume(timeout=5):
-                        parser = lvk(
-                            log=log,
-                            record=message.value(),
-                            settings=settings,
-                            plugins=pluginsFlag
-                        ).parse()
-                        consumer.commit(message)
+                        try:
+                            parser = lvk(
+                                log=log,
+                                record=message.value(),
+                                settings=settings,
+                                plugins=pluginsFlag
+                            ).parse()
+                            consumer.commit(message)
+                        except Exception as e:
+                            log.error(f'could not parse alert! Failed with error: {e}')
 
                 self.log.info('completed the ``action`` method')
                 return None
