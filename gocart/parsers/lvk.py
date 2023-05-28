@@ -225,6 +225,8 @@ class lvk(object):
 
         # WRITE SKY MAP
         if localisation:
+            if localisation == "ligo-skymap-from-samples":
+                localisation = "bilby"
             fitsPath = f"{alertDir}/{localisation}.multiorder.fits"
             with open(fitsPath, "wb") as f:
                 f.write(skymap_bytes)
@@ -319,7 +321,7 @@ class lvk(object):
             if 'alert_types' in f and not alert['ALERT']['alert_type'].lower() in f['alert_types']:
                 passing = False
                 message.append(f"Alert type is {alert['ALERT']['alert_type'].lower()}")
-            if "ns_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'classification' in alert['ALERT']['event'] and not alert['ALERT']['event']['classification']['BNS'] + alert['ALERT']['event']['classification']['NSBH'] >= f["ns_lower"]:
+            if "ns_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'classification' in alert['ALERT']['event'] and len(alert['ALERT']['event']['classification']) and not alert['ALERT']['event']['classification']['BNS'] + alert['ALERT']['event']['classification']['NSBH'] >= f["ns_lower"]:
                 passing = False
                 message.append(f"BNS+NSBH = {alert['ALERT']['event']['classification']['BNS'] + alert['ALERT']['event']['classification']['NSBH']} (< {f['ns_lower']})")
             if "far_upper" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and not alert['ALERT']['event']['far'] < f["far_upper"]:
@@ -331,10 +333,10 @@ class lvk(object):
             if "area90_upper" in f and 'EXTRA' in alert and 'area90' in alert['EXTRA'] and not alert['EXTRA']['area90'] < f["area90_upper"]:
                 passing = False
                 message.append(f"area90 = {alert['EXTRA']['area90']} (> {f['area90_upper']})")
-            if "hasns_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and not alert['ALERT']['event']['properties']['HasNS'] >= f["hasns_lower"]:
+            if "hasns_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and len(alert['ALERT']['event']['properties']) and not alert['ALERT']['event']['properties']['HasNS'] >= f["hasns_lower"]:
                 passing = False
                 message.append(f"HasNS = {alert['ALERT']['event']['properties']['HasNS']} (< {f['hasns_lower']})")
-            if "hasremnant_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and not alert['ALERT']['event']['properties']['HasRemnant'] >= f["hasremnant_lower"]:
+            if "hasremnant_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and len(alert['ALERT']['event']['properties']) and not alert['ALERT']['event']['properties']['HasRemnant'] >= f["hasremnant_lower"]:
                 passing = False
                 message.append(f"HasRemnant = {alert['ALERT']['event']['properties']['HasRemnant']} (< {f['hasremnant_lower']})")
             if "event_dir_exists" in f:
