@@ -59,6 +59,7 @@ Within the settings file, you have the option to write 'filters'. An alert comin
 - `hasns_lower`: a lower limit for the `HasNS` property.
 - `hasremnant_lower`: a lower limit for the `HasRemnant` property.
 - `event_dir_exist`: the event directory already exists, i.e. a previous alert passed the filtering criteria.
+- `burst`: the alert results from an unmodelled burst event.
 
 When running gocart in listen or echo mode, the status of the alert's filter pass or fail state will be reported.
 
