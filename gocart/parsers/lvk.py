@@ -315,8 +315,17 @@ class lvk(object):
                 "area90_upper",
                 "hasns_lower",
                 "hasremnant_lower",
-                "event_dir_exists"
+                "event_dir_exists",
+                "burst"
             ]
+
+            # BURST EVENTS
+            if 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'group' in alert['ALERT']['event'] and alert['ALERT']['event']['group']:
+                passing = False
+                if "burst" in f and f["burst"]:
+                    passing = True
+                else:
+                    message.append(f"This is a burst event")
 
             if 'alert_types' in f and not alert['ALERT']['alert_type'].lower() in f['alert_types']:
                 passing = False

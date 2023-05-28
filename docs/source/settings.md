@@ -27,6 +27,9 @@ lvk:
     # UP FRONT FILTERING OF ALERTS. ONLY IF AN ALERT PASSES 1 OR MORE OF THESE FILTERS WILL THE ALERT (AND ASSOCIATED ASSETS) GET WRITTEN TO FILE
     # AN ALERT MUST PASS ALL INDIVIDUAL CRITERIA WITHIN A FILTER TO PASS
     filters:
+        - name: burst
+          alert_types: [initial, update]
+          burst: True
         - name: general
           alert_types: [initial, update, retraction]
           ns_lower: 0.9
