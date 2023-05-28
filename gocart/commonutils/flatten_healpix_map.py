@@ -90,7 +90,10 @@ def flatten_healpix_map(
     }
     upTable = pd.DataFrame(myDict)
     # MERGE DATAFRAMES
-    upTable = upTable.merge(tableData, on=['UNIQ'], how='inner')[[f'IPIX{nside}', 'PROBDENSITY', 'DISTMU', 'DISTSIGMA', 'DISTNORM']]
+    if "DISTMU" in upTable.columns:
+        upTable = upTable.merge(tableData, on=['UNIQ'], how='inner')[[f'IPIX{nside}', 'PROBDENSITY', 'DISTMU', 'DISTSIGMA', 'DISTNORM']]
+    else:
+        upTable = upTable.merge(tableData, on=['UNIQ'], how='inner')[[f'IPIX{nside}', 'PROBDENSITY']]
     pixArea = ah.nside_to_pixel_area(nside).to_value(u.steradian)
     upTable["PROB"] = upTable["PROBDENSITY"] * pixArea
     # REMOVE COLUMN FROM DATA FRAME
@@ -104,7 +107,10 @@ def flatten_healpix_map(
     # FIND THE PIXEL INDEX AT ORDER NSIDE
     downTable[f'IPIX{nside}'] = np.floor_divide(tableData.loc[mask, 'IPIX'], np.power(4, (tableData.loc[mask, 'LEVEL'].values - level)))
     # GROUP RESULTS
-    downTable = downTable.groupby([f'IPIX{nside}']).agg({'PROB': 'sum', 'DISTMU': 'mean', 'DISTSIGMA': 'mean', 'DISTNORM': 'mean'})
+    if "DISTMU" in downTable.columns:
+        downTable = downTable.groupby([f'IPIX{nside}']).agg({'PROB': 'sum', 'DISTMU': 'mean', 'DISTSIGMA': 'mean', 'DISTNORM': 'mean'})
+    else:
+        downTable = downTable.groupby([f'IPIX{nside}']).agg({'PROB': 'sum'})
     downTable.reset_index(inplace=True)
 
     skymap = pd.concat([downTable, upTable], ignore_index=True)
@@ -117,8 +123,9 @@ def flatten_healpix_map(
     skymap.drop(columns=[f'IPIX{nside}', 'index'], inplace=True)
 
     # REMOVE FILTERED ROWS FROM DATA FRAME
-    mask = (skymap['DISTMU'].isnull())
-    skymap.loc[mask, 'DISTMU'] = np.inf
+    if "DISTMU" in downTable.columns:
+        mask = (skymap['DISTMU'].isnull())
+        skymap.loc[mask, 'DISTMU'] = np.inf
 
     log.debug('completed the ``flatten_healpix_map`` function')
     return skymap

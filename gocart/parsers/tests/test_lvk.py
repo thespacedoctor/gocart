@@ -48,6 +48,7 @@ testAlerts = [
     'MS181101ab-preliminary.json',
     'MS181101ab-retraction.json',
     'MS181101ab-update.json',
+    'S230528ay-preliminary.json'
 ]
 
 
