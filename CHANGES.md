@@ -1,6 +1,13 @@
 
 ## Release Notes
 
+**v0.4.2 - May 28, 2023**
+
+- **ENHANCEMENT**: added a `burst` filtering parameter. If set to True, burst event alerts will pass the filter, otherwise they filtered out (default).
+- **REFACTOR**: maps with `CREATOR: ligo-skymap-from-samples` now named on file as `bilby.multiorder.fits`.
+- **REFACTOR**: try, except added to listen parser. If an alert breaks the parser an ugly error message is reported, but the listener stays alive to listen to subsequent alerts.
+- **FIXED**: burst events causing headaches for filtering and map conversion. The first 'real' burst event provided the necessary alert packet and map to create a realistic unit test for the entire codebase. The code is now much more robust to busrt event alerts.
+
 **v0.4.1 - May 25, 2023**
 
 - **FIXED**: a bug in filtering routine that caused alerts to pass the filtering algorithm if an unknown parameter in the filtering settings was found. It now fails by default instead of passing.

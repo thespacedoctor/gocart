@@ -1,1 +1,1 @@
-__version__ = 'burst-fixes'
+__version__ = '0.4.2'

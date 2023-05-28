@@ -224,6 +224,7 @@ def main(arguments=None):
                             ).parse()
                             consumer.commit(message)
                         except Exception as e:
+                            consumer.commit(message)
                             log.error(f'could not parse alert! Failed with error: {e}')
 
                 self.log.info('completed the ``action`` method')
