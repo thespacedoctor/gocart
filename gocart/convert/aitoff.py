@@ -87,7 +87,7 @@ class aitoff(object):
         from . import healpix2cart
         import astropy.units as u
         import numpy as np
-        from astropy.coordinates import SkyCoord, Galactic, get_sun, get_moon
+        from astropy.coordinates import SkyCoord, Galactic, get_sun, get_body
         from matplotlib.projections.geo import GeoAxes
         from matplotlib.cm import get_cmap
         import matplotlib.patches as mpatches
@@ -172,7 +172,7 @@ class aitoff(object):
             ax.contourf(lons2, lats2, sunlight, 1, colors=[sunyellow, (0.0, 0.0, 0.0, 0.0)], zorder=3)
 
             # PLOT THE MOON
-            moon = get_moon(t)
+            moon = get_body("moon", t)
             moon.ra.degree = -moon.ra.degree + 180
             if moon.ra.degree > 180.:
                 moon.ra.degree -= 360
@@ -211,7 +211,7 @@ class aitoff(object):
             ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label=label, zorder=30)
 
             # PLOT THE MOON
-            moon = get_moon(t)
+            moon = get_body("moon", t)
             moon.ra.degree = -moon.ra.degree + 180
             if moon.ra.degree > 180.:
                 moon.ra.degree -= 360

@@ -173,6 +173,9 @@ class lvk(object):
                 skymap_bytes = b64decode(skymap_str)
                 skymap = Table.read(BytesIO(skymap_bytes))
                 localisation = skymap.meta["CREATOR"].lower()
+                if localisation == "ligo-skymap-from-samples":
+                    skymap.meta["CREATOR"] = "bilby"
+                    localisation = "bilby"
                 header = {k: v for k, v in skymap.meta.items() if k != "HISTORY"}
                 # GENERATE SOME EXTRA STATS
                 extras = generate_skymap_stats(
@@ -225,8 +228,6 @@ class lvk(object):
 
         # WRITE SKY MAP
         if localisation:
-            if localisation == "ligo-skymap-from-samples":
-                localisation = "bilby"
             fitsPath = f"{alertDir}/{localisation}.multiorder.fits"
             with open(fitsPath, "wb") as f:
                 f.write(skymap_bytes)
