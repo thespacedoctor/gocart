@@ -1,6 +1,7 @@
 
 ## Release Notes
 
+
 **v0.4.2 - May 28, 2023**
 
 - **ENHANCEMENT**: added a `burst` filtering parameter. If set to True, burst event alerts will pass the filter, otherwise they filtered out (default).
