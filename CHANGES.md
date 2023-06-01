@@ -1,7 +1,7 @@
 
 ## Release Notes
 
-**v0.4.3 - June 1, 2023**
+**v0.4.4 - June 1, 2023**
 
 - **FIXED**: fix in prob calculations in flattened maps
 - **FIXED**: allowing symlinks in plugin folder
