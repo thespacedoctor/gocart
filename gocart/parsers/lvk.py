@@ -267,7 +267,7 @@ class lvk(object):
             pathToDirectory = home + "/.config/gocart/plugins"
             for d in os.listdir(pathToDirectory):
                 filepath = os.path.join(pathToDirectory, d)
-                if os.path.isfile(filepath) and d[:3] == "gp_":
+                if (os.path.isfile(filepath) or os.path.islink(filepath)) and d[:3] == "gp_":
                     cmd = f"""/usr/bin/env python {filepath} {alertDir}"""
                     print(f"PLUGIN: {d}")
                     try:
