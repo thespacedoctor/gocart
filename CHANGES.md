@@ -1,6 +1,7 @@
 
 ## Release Notes
 
+allowing symlinks in plugin folder
 
 **v0.4.2 - May 28, 2023**
 
