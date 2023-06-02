@@ -1,8 +1,12 @@
 
 ## Release Notes
 
+**v0.4.4 - June 1, 2023**
+
 - **REFACTOR**: `get_moon` has being depreciated in astropy, moving to get_body("moon")
 - **FIXED**: bilby now correctly reported as localisation on RHS of aitoff skymaps
+- **FIXED**: fix in prob calculations in flattened maps
+- **FIXED**: allowing symlinks in plugin folder
 
 **v0.4.2 - May 28, 2023**
 

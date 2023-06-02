@@ -73,8 +73,8 @@ def flatten_healpix_map(
     # UPSAMPLE TABLE
     # FIND THE HIGH-LEVEL PIXEL INDEXES FOR EACH UNIQ PIXEL
     # MAKE A NEW DATAFRAME WITH IPIX64, UNIQ
-    # MATCH EACH NEW UNIQ AGAIN ORIGINAL FRAME UNIQ TO GENERATE DATA FOR IPIX^$ FRAME
-    mask = tableData['NSIDE'] <= nside
+    # MATCH EACH NEW UNIQ AGAINST ORIGINAL FRAME UNIQ TO GENERATE DATA FOR IPIX^$ FRAME
+    mask = (tableData['NSIDE'] <= nside)
     upTable = tableData.loc[mask].copy()
     upTable.reset_index(inplace=True)
     this = uniq2range(nside, upTable['UNIQ'])
@@ -105,7 +105,8 @@ def flatten_healpix_map(
     downTable.reset_index(inplace=True)
 
     # FIND THE PIXEL INDEX AT ORDER NSIDE
-    downTable[f'IPIX{nside}'] = np.floor_divide(tableData.loc[mask, 'IPIX'], np.power(4, (tableData.loc[mask, 'LEVEL'].values - level)))
+    downTable[f'IPIX{nside}'] = np.floor_divide(downTable['IPIX'], np.power(4, (downTable['LEVEL'].values - level)))
+
     # GROUP RESULTS
     if "DISTMU" in downTable.columns:
         downTable = downTable.groupby([f'IPIX{nside}']).agg({'PROB': 'sum', 'DISTMU': 'mean', 'DISTSIGMA': 'mean', 'DISTNORM': 'mean'})
