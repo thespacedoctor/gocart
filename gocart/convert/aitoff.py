@@ -26,6 +26,10 @@ class aitoff(object):
         - ``outputFolder`` -- path to output the results to
         - ``settings`` -- the settings dictionary
         - ``meta`` -- extra meta data to present on plots. Default: {}
+        - ``plotName`` -- the filename of the plot
+        - ``patches`` -- a patch collect to add to the plot
+        - ``patchesColor`` -- colour of the patches. Default '#859900'
+        - ``patchesLabel`` -- label for patches in the legend. Default None
 
     **Usage:**
 
@@ -50,14 +54,22 @@ class aitoff(object):
             mapPath,
             outputFolder,
             settings=False,
-            meta={}
+            meta={},
+            plotName="skymap.png",
+            patches=None,
+            patchesColor='#859900',
+            patchesLabel=None
     ):
         self.log = log
-        log.debug("instansiating a new 'aitoff' object")
+        log.debug("instantiating a new 'aitoff' object")
         self.settings = settings
         self.mapPath = mapPath
         self.outputFolder = outputFolder
         self.meta = meta
+        self.plotName = plotName
+        self.patches = patches
+        self.patchesColor = patchesColor
+        self.patchesLabel = patchesLabel
         # xt-self-arg-tmpx
 
         return None
@@ -93,9 +105,11 @@ class aitoff(object):
         import matplotlib.patches as mpatches
         from matplotlib.lines import Line2D
         from astropy.time import Time
+        from matplotlib.collections import PatchCollection
 
         import matplotlib
-        matplotlib.use('PDF')
+        # matplotlib.use('PDF')
+        # plt.ion()
 
         class ThetaFormatterShiftPi(GeoAxes.ThetaFormatter):
             """SHIFTS LABELLING BY PI
@@ -113,6 +127,9 @@ class aitoff(object):
             settings=self.settings
         )
         wcs, mapDF, header = converter.convert()
+
+        # DROP MISSING VALUES
+        mapDF.dropna(axis='index', how='any', subset=['PROB'], inplace=True)
 
         xsize = mapDF["PIXEL_X"].max() - mapDF["PIXEL_X"].min() + 1
         ysize = mapDF["PIXEL_Y"].max() - mapDF["PIXEL_Y"].min() + 1
@@ -132,7 +149,7 @@ class aitoff(object):
         fig = plt.figure()
 
         # AITOFF DOES NOT PLAY WELL WITH ADDING LABELS - USE HAMMER PROJECTION INSTEAD
-        ax = fig.add_subplot(111, projection='hammer')
+        ax = fig.add_subplot(111, projection='hammer', zorder=60)
 
         # RASTERIZED MAKES THE MAP BITMAP WHILE THE LABELS REMAIN VECTORIAL
         std = data.std()
@@ -168,8 +185,8 @@ class aitoff(object):
             raSep[raSep > np.pi] = 2 * np.pi - raSep[raSep > np.pi]
             separation = ((raSep * np.cos((sun.dec.radian + lats2) / 2))**2 + (sun.dec.radian - lats2)**2)**0.5
             sunlight[separation < np.radians(33)] = 0
-            sunyellow = matplotlib.colors.colorConverter.to_rgba('#b58900', alpha=0.2)
-            ax.contourf(lons2, lats2, sunlight, 1, colors=[sunyellow, (0.0, 0.0, 0.0, 0.0)], zorder=3)
+            sunyellow = matplotlib.colors.colorConverter.to_rgba('#ffc202', alpha=0.15)
+            ax.contourf(lons2, lats2, sunlight, 1, colors=[sunyellow, (0.0, 0.0, 0.0, 0.0)], zorder=30)
 
             # PLOT THE MOON
             moon = get_body("moon", t)
@@ -192,7 +209,7 @@ class aitoff(object):
             separation = ((raSep * np.cos((moon.dec.radian + lats2) / 2))**2 + (moon.dec.radian - lats2)**2)**0.5
             moonlight[separation < np.radians(20)] = 0
             moonblue = matplotlib.colors.colorConverter.to_rgba('#268bd2', alpha=0.2)
-            ax.contourf(lons2, lats2, moonlight, 1, colors=[moonblue, (0.0, 0.0, 0.0, 0.0)], zorder=3)
+            ax.contourf(lons2, lats2, moonlight, 1, colors=[moonblue, (0.0, 0.0, 0.0, 0.0)], zorder=29)
 
         # PLOT THE SUN
         if sunmoon:
@@ -208,7 +225,7 @@ class aitoff(object):
             label = "Sun"
             if sunmoonContour:
                 label += " (within $33^o$)"
-            ax.scatter(sun.ra.radian, sun.dec.radian, color="#b58900", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label=label, zorder=30)
+            ax.scatter(sun.ra.radian, sun.dec.radian, color="#ffc202", alpha=0.8, s=20, marker="o", edgecolors="#cb4b16", linewidths=0.5, label=label, zorder=30)
 
             # PLOT THE MOON
             moon = get_body("moon", t)
@@ -241,6 +258,8 @@ class aitoff(object):
             planeColour = "#dc322f"
             ax.scatter(np.radians(gx), np.radians(gDec),
                        color=planeColour, alpha=1, s=1)
+            ax.scatter(np.radians(gx), np.radians(gDec),
+                       color=planeColour, alpha=0.1, s=1, zorder=30)
             line = Line2D([0], [0], label='Galactic Plane', color=planeColour)
             handles.append(line)
 
@@ -249,18 +268,20 @@ class aitoff(object):
                               ascending=[False], inplace=True)
             mapDF["CUMPROB"] = np.cumsum(mapDF['PROB'])
             mapDF["CUMPROB"] = mapDF["CUMPROB"] * 100. * mapDF["PROB"].sum()
+
             mapDF.sort_index(inplace=True)
+
             contours = mapDF["CUMPROB"].values.reshape((ysize, xsize))
 
-            colors = ['#474973', '#a69cac', '#03F7EB']
-            levels = [90, 50, 10]
+            colors = ['#a2a4c6', '#cdc2d3', '#8bfdf8']
+            levels = [90.0, 50.0, 10.0]
 
             z = 10
 
             for c, l in zip(colors, levels):
                 z += 1
                 ax.contourf(long, lat,
-                            contours, levels=[0, l], colors=c, zorder=z, alpha=0.8)
+                            contours, levels=[-1, l], colors=c, zorder=z, alpha=1., nchunk=10, antialiased=False)
                 if "EXTRA" in self.meta and f"area{l}" in self.meta["EXTRA"]:
                     area = self.meta["EXTRA"][f"area{l}"]
                     label = f"{l}%: {area:.1f} deg$^2$"
@@ -276,6 +297,12 @@ class aitoff(object):
             data += f"Event time: {eventDate}\n"
 
             data += "\n"
+            if "significant" in self.meta['ALERT']['event']:
+                if self.meta['ALERT']['event']["significant"]:
+                    data += f"Significance: HIGH\n"
+                else:
+                    data += f"Significance: LOW\n"
+
             data += f"Alert: {self.meta['ALERT']['alert_type'].replace('_',' ')}\n"
             alertDate = Time(self.meta['ALERT']['time_created'], scale='utc').to_datetime().strftime("%Y-%m-%d %H:%M:%S")
             data += f"Alert time: {alertDate}\n"
@@ -313,14 +340,23 @@ class aitoff(object):
 
         # this = ax.clabel(line_c, inline=True, fontsize=6, colors=['#93a1a1'], fmt='{:.0f} '.format)
 
+        if self.patches:
+            ax.add_collection(PatchCollection(self.patches, alpha=0.4,
+                                              color=self.patchesColor, zorder=27))
+            if self.patchesLabel:
+                patch = mpatches.Patch(color=self.patchesColor, label=self.patchesLabel)
+                handles.append(patch)
+
         ax.tick_params(axis='x', labelsize=12)
         ax.tick_params(axis='y', labelsize=12)
-        ax.grid(color='#657b83', alpha=0.2, linestyle='dotted')
-        plt.grid(True)
+        ax.grid(color='#657b83', alpha=0.4, linestyle='dotted')
         plt.legend(handles=handles, loc='upper left', scatterpoints=1, bbox_to_anchor=(1.01, 1), fontsize=6)
         ax.xaxis.zorder = 40
+        ax.yaxis.zorder = 40
 
-        plt.savefig(self.outputFolder + "/skymap.png", bbox_inches='tight', dpi=300)
+        plt.grid(True)
+
+        plt.savefig(self.outputFolder + f"/{self.plotName}", bbox_inches='tight', dpi=300)
 
         plt.close()
 

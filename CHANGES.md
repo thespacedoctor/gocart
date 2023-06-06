@@ -1,6 +1,14 @@
 
 ## Release Notes
 
+**v0.4.5 - June 6, 2023**
+
+- **FEATURE**: added ability to plot square footprints on to the aitoff skymaps  
+- **ENHANCEMENT**: significance explicitly added to RHS sidebar of maps  
+- **REFACTOR**: colours of map contours adjusted to pastel colours  
+- **REFACTOR**: transparency of sun, moon, galactic plane adjusted for greater clarity  
+- **FIXED**: contours often getting tangled at the poles of the aitoff maps and rendering incorrectly. Solved by 'chunking' the filled contours with matplotlib  
+
 **v0.4.4 - June 1, 2023**
 
 - **REFACTOR**: `get_moon` has being depreciated in astropy, moving to get_body("moon")
