@@ -96,6 +96,10 @@ class aitoff(object):
         self.log.debug('starting the ``convert`` method')
 
         import matplotlib.pyplot as plt
+        from gocart.commonutils import getpackagepath
+        styleFile = getpackagepath() + "/resources/package.mplstyle"
+        plt.style.use(styleFile)
+
         from . import healpix2cart
         import astropy.units as u
         import numpy as np
@@ -108,7 +112,8 @@ class aitoff(object):
         from matplotlib.collections import PatchCollection
 
         import matplotlib
-        # matplotlib.use('PDF')
+
+        matplotlib.use('PDF')
         # plt.ion()
 
         class ThetaFormatterShiftPi(GeoAxes.ThetaFormatter):
@@ -282,11 +287,11 @@ class aitoff(object):
                 z += 1
                 ax.contourf(long, lat,
                             contours, levels=[-1, l], colors=c, zorder=z, alpha=1., nchunk=10, antialiased=False)
-                if "EXTRA" in self.meta and f"area{l}" in self.meta["EXTRA"]:
-                    area = self.meta["EXTRA"][f"area{l}"]
-                    label = f"{l}%: {area:.1f} deg$^2$"
+                if "EXTRA" in self.meta and f"area{int(l)}" in self.meta["EXTRA"]:
+                    area = self.meta["EXTRA"][f"area{int(l)}"]
+                    label = f"{int(l)}%: {area:.1f} deg$^2$"
                 else:
-                    label = f"{l}%"
+                    label = f"{int(l)}%"
                 patch = mpatches.Patch(color=c, label=label)
                 handles.append(patch)
 
