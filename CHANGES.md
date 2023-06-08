@@ -1,6 +1,11 @@
 
 ## Release Notes
 
+**v0.4.6 - June 8, 2023**
+
+- **REFACTOR**: making plots consistent across platforms by including a MPL style file
+- **FIXED**: area of contours now included in plots if generated from a plugin
+
 **v0.4.5 - June 6, 2023**
 
 - **FEATURE**: added ability to plot square footprints on to the aitoff skymaps  
