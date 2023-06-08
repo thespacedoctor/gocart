@@ -355,7 +355,7 @@ class aitoff(object):
         ax.tick_params(axis='x', labelsize=12)
         ax.tick_params(axis='y', labelsize=12)
         ax.grid(color='#657b83', alpha=0.4, linestyle='dotted')
-        plt.legend(handles=handles, loc='upper left', scatterpoints=1, bbox_to_anchor=(1.01, 1), fontsize=6)
+        plt.legend(handles=handles, loc='upper left', scatterpoints=1, bbox_to_anchor=(1.01, 1.02), fontsize=6)
         ax.xaxis.zorder = 40
         ax.yaxis.zorder = 40
 
