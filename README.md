@@ -19,7 +19,7 @@
 [![](https://readthedocs.org/projects/gocart/badge/?version=main)](https://gocart.readthedocs.io/en/main/)
 [![](https://img.shields.io/github/issues/thespacedoctor/gocart/type:%20bug?label=bug%20issues)](https://github.com/thespacedoctor/gocart/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3A+bug%22+)  
 
-*gocart is a python package and command-line suite used to consume [GCN Kafka streams](https://gcn.nasa.gov).*.
+*gocart is a python package and command-line suite used to consume [GCN Kafka streams](https://gcn.nasa.gov).*
 
 Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs.io/en/main/) ([development version](https://gocart.readthedocs.io/en/develop/) and [main version](https://gocart.readthedocs.io/en/main/)). The code lives on [github](https://github.com/thespacedoctor/gocart). Please report any issues you find [here](https://github.com/thespacedoctor/gocart/issues).
 
@@ -30,7 +30,7 @@ Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs
 - Alert content, FITS Header data and some extra value-added event parameters are written to a single machine-readable YAML file.
 - The healpix skymaps are optionally converted to ascii files (one row per healpix pixel) and/or rendered as aitoff plots.
 - Create your own plugin scripts to run whenever an alert is parsed.
-
+- works well in conjunction with [skyTag](https://github.com/thespacedoctor/skyTag).
 
 ## Installation
 
@@ -96,6 +96,10 @@ Open your gocart settings file at `~/.config/gocart/gocart.yaml` and copy and pa
 Don't worry about the `group_id` parameter, it's initially set to XXXX but gocart will replace this with a unique value when it's first run. It is this `group_id` that allows GCN Kafka to remember which alerts you have or have not heard before. Note the example client above has been deleted, so the credentials quoted here will not work.
 
 You are now ready to start using gocart.
+
+## SkyTag
+
+gocart works very well in conjunction with [skyTag](https://github.com/thespacedoctor/skyTag), a tool to 'annotate' transient sources or galaxies with the percentage credibility region they reside within on a given HealPix sky map.
 
 ## How to cite gocart
 
