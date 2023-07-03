@@ -21,6 +21,8 @@
 
 *gocart is a python package and command-line suite used to consume [GCN Kafka streams](https://gcn.nasa.gov).*
 
+[![](https://live.staticflickr.com/65535/52985431851_6a4ed02836_m.png)](https://live.staticflickr.com/65535/52985431851_6a4ed02836_o.png)
+
 Documentation for gocart is hosted by [Read the Docs](https://gocart.readthedocs.io/en/main/) ([development version](https://gocart.readthedocs.io/en/develop/) and [main version](https://gocart.readthedocs.io/en/main/)). The code lives on [github](https://github.com/thespacedoctor/gocart). Please report any issues you find [here](https://github.com/thespacedoctor/gocart/issues).
 
 ## Features
