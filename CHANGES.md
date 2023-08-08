@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.7 - August 8, 2023**
+
+- **FIXED**: fixing parsing issue for initial burst alerts containing image links as property and classification parameters  
+
 **v0.4.6 - June 8, 2023**
 
 - **REFACTOR**: making plots consistent across platforms by including a MPL style file
