@@ -332,14 +332,20 @@ class aitoff(object):
                 data += f"Redshift: {zlow:0.2}<z<{zhigh:0.2}\n"
 
             data += "\n"
-            if "classification" in self.meta['ALERT']['event']:
-                for k, v in self.meta['ALERT']['event']['classification'].items():
-                    data += f"{k}: {v:.2f}\n"
+            try:
+                if "classification" in self.meta['ALERT']['event']:
+                    for k, v in self.meta['ALERT']['event']['classification'].items():
+                        data += f"{k}: {v:.2f}\n"
+            except:
+                pass
 
             data += "\n"
-            if "properties" in self.meta['ALERT']['event']:
-                for k, v in self.meta['ALERT']['event']['properties'].items():
-                    data += f"{k}: {v:.2f}\n"
+            try:
+                if "properties" in self.meta['ALERT']['event']:
+                    for k, v in self.meta['ALERT']['event']['properties'].items():
+                        data += f"{k}: {v:.2f}\n"
+            except:
+                pass
 
             plt.text(3.42, 0.2, data, ha='left', va='top', fontsize=5, linespacing=1.8)
 
