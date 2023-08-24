@@ -8,7 +8,6 @@ Usage:
     gocart [-p] echo <daysAgo> [-s <pathToSettingsFile>]
     gocart [-p] (listen|quit|restart|status) [-s <pathToSettingsFile>]
 
-
 Options:
     init                                   setup the gocart settings file for the first time
     echo <daysAgo>                         relisten to alerts from N <daysAgo> until now and then exit
