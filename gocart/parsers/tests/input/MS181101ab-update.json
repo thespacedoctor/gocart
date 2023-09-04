@@ -6,6 +6,7 @@
         "gracedb": "https://example.org/superevents/MS181101ab/view/"
     },
     "event": {
+        "significant": true,
         "time": "2018-11-01T22:22:46.654Z",
         "far": 9.11069936486e-14,
         "instruments": [

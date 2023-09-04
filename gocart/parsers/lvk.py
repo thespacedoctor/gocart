@@ -149,10 +149,14 @@ class lvk(object):
                 far = f"1 per {far:0.1f} yrs"
             else:
                 far = f"1 per {far:0.1f} days"
-            significant = self.record['event']['significant']
+
             print(f'EVENT: {self.record["superevent_id"]} detected at {self.record["event"]["time"].replace("Z","")} UTC ({self.record["event"]["group"]})')
             print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC (+{timeDelta:.2f} mins)')
-            print(f'SIGNIFICANT: {significant}')
+
+            if 'significant' in self.record['event']:
+                significant = self.record['event']['significant']
+                print(f'SIGNIFICANT: {significant}')
+
             try:
                 if "classification" in self.record['event'] and len(self.record['event']['classification']):
                     for k, v in self.record['event']['classification'].items():
