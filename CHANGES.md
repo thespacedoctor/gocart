@@ -1,6 +1,12 @@
 
 ## Release Notes
 
+**v0.4.8 - September 4, 2023**
+
+- **ENHANCEMENT**: added a 'significant' filter option to filter on significant = True or False
+- **FIXED**: bug in burst filtering
+
+
 **v0.4.7 - August 8, 2023**
 
 - **FIXED**: fixing parsing issue for initial burst alerts containing image links as property and classification parameters  

@@ -149,9 +149,10 @@ class lvk(object):
                 far = f"1 per {far:0.1f} yrs"
             else:
                 far = f"1 per {far:0.1f} days"
+            significant = self.record['event']['significant']
             print(f'EVENT: {self.record["superevent_id"]} detected at {self.record["event"]["time"].replace("Z","")} UTC ({self.record["event"]["group"]})')
             print(f'ALERT: {self.record["alert_type"].replace("_"," ")} reported at {self.record["time_created"].replace("Z","")} UTC (+{timeDelta:.2f} mins)')
-            print(f'FAR: {far}')
+            print(f'SIGNIFICANT: {significant}')
             try:
                 if "classification" in self.record['event'] and len(self.record['event']['classification']):
                     for k, v in self.record['event']['classification'].items():
@@ -323,16 +324,19 @@ class lvk(object):
                 "hasns_lower",
                 "hasremnant_lower",
                 "event_dir_exists",
-                "burst"
+                "burst",
+                "significant"
             ]
 
             # BURST EVENTS
-            if 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'group' in alert['ALERT']['event'] and alert['ALERT']['event']['group']:
-                passing = False
+            if 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'group' in alert['ALERT']['event'] and alert['ALERT']['event']['group'] and alert['ALERT']['event']['group']:
                 if "burst" in f and f["burst"]:
-                    passing = True
-                else:
-                    message.append(f"This is a burst event")
+                    if alert['ALERT']['event']['group'].lower() != "burst":
+                        passing = False
+                        message.append(f"This is a {alert['ALERT']['event']['group']} event")
+                elif alert['ALERT']['event']['group'].lower() == "burst":
+                    passing = False
+                    message.append(f"This is a {alert['ALERT']['event']['group']} event")
 
             if 'alert_types' in f and not alert['ALERT']['alert_type'].lower() in f['alert_types']:
                 passing = False
@@ -355,6 +359,10 @@ class lvk(object):
             if "hasremnant_lower" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'properties' in alert['ALERT']['event'] and len(alert['ALERT']['event']['properties']) and not alert['ALERT']['event']['properties']['HasRemnant'] >= f["hasremnant_lower"]:
                 passing = False
                 message.append(f"HasRemnant = {alert['ALERT']['event']['properties']['HasRemnant']} (< {f['hasremnant_lower']})")
+            if "significant" in f and 'event' in alert['ALERT'] and alert['ALERT']['event'] and 'significant' in alert['ALERT']['event'] and f['significant'] != alert['ALERT']['event']['significant']:
+                passing = False
+                message.append(f"Significant = {alert['ALERT']['event']['significant']}")
+
             if "event_dir_exists" in f:
                 if self.record["superevent_id"][0] == 'M':
                     eventDir = self.mockDir + self.record["superevent_id"]

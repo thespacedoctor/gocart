@@ -27,9 +27,10 @@ lvk:
     # UP FRONT FILTERING OF ALERTS. ONLY IF AN ALERT PASSES 1 OR MORE OF THESE FILTERS WILL THE ALERT (AND ASSOCIATED ASSETS) GET WRITTEN TO FILE
     # AN ALERT MUST PASS ALL INDIVIDUAL CRITERIA WITHIN A FILTER TO PASS
     filters:
-        - name: burst
+        - name: significant bursts
           alert_types: [initial, update]
           burst: True
+          significant: True
         - name: general
           alert_types: [initial, update, retraction]
           ns_lower: 0.9
@@ -60,6 +61,7 @@ Within the settings file, you have the option to write 'filters'. An alert comin
 - `hasremnant_lower`: a lower limit for the `HasRemnant` property.
 - `event_dir_exist`: the event directory already exists, i.e. a previous alert passed the filtering criteria.
 - `burst`: the alert results from an unmodelled burst event.
+- `significant`: is the significance flag set to True or False
 
 When running gocart in listen or echo mode, the status of the alert's filter pass or fail state will be reported.
 
