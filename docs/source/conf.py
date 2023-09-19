@@ -154,14 +154,15 @@ def updateUsageMd():
     """
     *Grab the usage from cl_utils.py to display in README.md*
     """
-    from gocart import cl_utils
+    from neddy import cl_utils
     usage = cl_utils.__doc__
 
     if not "Usage:" in usage or "todo:" in usage:
         return None
     usageString = ""
     for l in usage.split("\n"):
-        usageString += "    " + l + "\n"
+        if "Documentation for" not in l:
+            usageString += f"{l}\n"
 
     usage = """
 
