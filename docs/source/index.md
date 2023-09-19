@@ -10,6 +10,8 @@
    Get Started <index>
 ```
 
+{{usage.md}}
+
 ```eval_rst
 .. toctree::
    :maxdepth: 4
