@@ -165,6 +165,9 @@ def updateUsageMd():
             usageString += f"{l}\n"
 
     usage = """
+## Command-line Usage
+
+Here is neddy's entire CLI usage. More detail on each of the commands can be found elsewhere in the docs.
 
 ```bash 
 %(usageString)s
@@ -178,6 +181,7 @@ def updateUsageMd():
     writeFile.close()
 
     return None
+
 
 
 def generateAutosummaryIndex():
