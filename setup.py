@@ -16,12 +16,13 @@ install_requires = [
     'astropy==5.2.0',
     'astropy-healpix',
     'numpy',
-    'matplotlib',
+    'matplotlib==3.7.3',
     'healpy',
     'pandas',
     'tabulate',
     'gcn-kafka',
-    'mhealpy'
+    'mhealpy',
+    'pymysql'
 ]
 
 # READ THE DOCS SERVERS
