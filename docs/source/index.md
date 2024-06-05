@@ -10,9 +10,12 @@
    Get Started <index>
 ```
 
+{{usage.md}}
+
 ```eval_rst
 .. toctree::
    :maxdepth: 4
+   :hidden:
 
    Listen and Echo <listen_and_echo>
    File and Folders <files_and_folders>

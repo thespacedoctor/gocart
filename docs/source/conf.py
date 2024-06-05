@@ -161,9 +161,13 @@ def updateUsageMd():
         return None
     usageString = ""
     for l in usage.split("\n"):
-        usageString += "    " + l + "\n"
+        if "Documentation for" not in l:
+            usageString += f"{l}\n"
 
     usage = """
+## Command-line Usage
+
+Here is gocart's entire CLI usage. More detail on each command can be found elsewhere in the docs.
 
 ```bash 
 %(usageString)s
@@ -177,6 +181,7 @@ def updateUsageMd():
     writeFile.close()
 
     return None
+
 
 
 def generateAutosummaryIndex():

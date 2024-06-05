@@ -1,6 +1,6 @@
 # gocart
 
-[![](https://zenodo.org/badge/614846695.svg)](https://zenodo.org/badge/latestdoi/614846695)  
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.7970742.svg)](https://zenodo.org/doi/10.5281/zenodo.7970742) 
 
 <!-- INFO BADGES -->  
 
@@ -109,10 +109,10 @@ If you use `gocart` in your work, please cite using the following BibTeX entry:
 
 ```bibtex
 @software{Young_gocart,
-author = {Young, David R.},
-doi = {10.5281/zenodo.7970743},
-license = {GPL-3.0-only},
-title = {{gocart}},
-url = {https://github.com/thespacedoctor/gocart}
+  author = {Young, David R.},
+  doi = {10.5281/zenodo.7970742},
+  license = {GPL-3.0-only},
+  title = {{gocart. A GCN Kafka stream consumer and filter}},
+  url = {https://zenodo.org/doi/10.5281/zenodo.7970742}
 }
 ```
