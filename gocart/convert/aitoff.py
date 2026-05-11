@@ -30,6 +30,7 @@ class aitoff(object):
         - ``patches`` -- a patch collect to add to the plot
         - ``patchesColor`` -- colour of the patches. Default '#859900'
         - ``patchesLabel`` -- label for patches in the legend. Default None
+        - ``pathToTransientCSV`` -- path to a CSV file containing transient positions to plot on the map. Default None
 
     **Usage:**
 
@@ -58,7 +59,8 @@ class aitoff(object):
             plotName="skymap.png",
             patches=None,
             patchesColor='#859900',
-            patchesLabel=None
+            patchesLabel=None,
+            pathToTransientCSV=None
     ):
         self.log = log
         log.debug("instantiating a new 'aitoff' object")
@@ -70,6 +72,7 @@ class aitoff(object):
         self.patches = patches
         self.patchesColor = patchesColor
         self.patchesLabel = patchesLabel
+        self.pathToTransientCSV = pathToTransientCSV
         # xt-self-arg-tmpx
 
         return None
@@ -294,6 +297,18 @@ class aitoff(object):
                     label = f"{int(l)}%"
                 patch = mpatches.Patch(color=c, label=label)
                 handles.append(patch)
+
+            
+        if self.pathToTransientCSV:
+            import pandas as pd
+            transientDF = pd.read_csv(self.pathToTransientCSV)
+            for i, row in transientDF.iterrows():
+                ra = row["ra"]
+                dec = row["dec"]
+                label = row["name"] if "name" in row else None
+                ax.scatter(np.radians(-ra + 180), np.radians(dec), color="#dc322f", alpha=0.8, s=3, marker="o", edgecolors="#dc322f", linewidths=0.5, label=label, zorder=29)
+            circle = Line2D([0], [0], marker='o', linestyle='None', color='#dc322f', markerfacecolor='#dc322f', markeredgecolor='#dc322f', markersize=4, label='Transient')
+            handles.append(circle)
 
         if len(self.meta):
             data = ""
