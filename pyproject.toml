@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=70", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gocart"
+dynamic = ["version"]
+description = "Listen for, collect and convert multimessenger skymaps"
+authors = [
+    {name = "David Young", email= "david.young.rse@gmail.com"},
+]
+keywords = ['astronomy']
+requires-python = ">=3.11"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Utilities"
+]
+dependencies = [
+    'pyyaml',
+    'fundamentals',
+    'astropy==5.2.0',
+    'astropy-healpix',
+    'numpy',
+    'matplotlib==3.7.3',
+    'healpy',
+    'pandas',
+    'tabulate',
+    'gcn-kafka',
+    'mhealpy',
+    'pymysql'
+]
+
+[project.urls]
+"Homepage" = "https://github.com/thespacedoctor/gocart"
+
+[project.optional-dependencies]
+docs = [
+    "build",
+    "sphinx",
+    "sphinx-autodoc2",
+    "myst-parser",
+    "furo",
+    "sphinx-inline-tabs",
+    "sphinxext-opengraph",
+    "sphinx-autobuild",
+    "linkify-it-py",
+    "sphinxcontrib-mermaid",
+    "sphinx-togglebutton",
+    "sphinx_copybutton",
+    "sphinx_tippy",
+    "sphinx_design",
+    "pygments-csv-lexer",
+    "sphinxcontrib-svg2pdfconverter",
+    "sphinx-remove-toctrees",
+    "sphinxcontrib.bibtex",
+]
+tests = [
+    "pytest",
+    "pytest-cov",
+    "nose2"
+]
+dev = [
+    "gocart[tests, docs]",
+    "build",
+    "twine"
+]
+
+# THESE ARE ENTRY POINTS USED FOR THE CL-INTERFACE
+[project.scripts]
+gocart = 'gocart.cl_utils:main'
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+
+
+
