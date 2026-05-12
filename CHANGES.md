@@ -1,6 +1,11 @@
 
 ## Release Notes
 
+**v0.4.9 - May 12, 2026**
+
+- **ENHANCEMENT**: and optionally plot the sun and moon on aitoff plots (previously not optional).
+- **ENHANCEMENT**: can provide a path to a CSV file to plot transients on the maps.
+
 **v0.4.8 - September 4, 2023**
 
 - **ENHANCEMENT**: added a 'significant' filter option to filter on significant = True or False
