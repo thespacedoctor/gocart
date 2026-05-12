@@ -82,12 +82,11 @@ gocart = ["resources/**/*"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-exclude = ["tests", "tests.*", "*tests", "*tests.*"]
+exclude = ["tests", "tests.*"]
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 write_to = "gocart/__version__.py"
 write_to_template = "__version__ = '{version}'\n"
-
 
