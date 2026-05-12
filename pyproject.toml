@@ -74,8 +74,15 @@ dev = [
 gocart = 'gocart.cl_utils:main'
 
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+gocart = ["resources/**/*"]
+
 [tool.setuptools.packages.find]
 where = ["."]
+exclude = ["tests", "tests.*", "*tests", "*tests.*"]
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
