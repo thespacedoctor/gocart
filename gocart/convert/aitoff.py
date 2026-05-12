@@ -30,6 +30,7 @@ class aitoff(object):
         - ``patches`` -- a patch collect to add to the plot
         - ``patchesColor`` -- colour of the patches. Default '#859900'
         - ``patchesLabel`` -- label for patches in the legend. Default None
+        - ``pathToTransientCSV`` -- path to a CSV file containing transient positions to plot on the map. Default None
 
     **Usage:**
 
@@ -58,7 +59,8 @@ class aitoff(object):
             plotName="skymap.png",
             patches=None,
             patchesColor='#859900',
-            patchesLabel=None
+            patchesLabel=None,
+            pathToTransientCSV=None
     ):
         self.log = log
         log.debug("instantiating a new 'aitoff' object")
@@ -70,6 +72,7 @@ class aitoff(object):
         self.patches = patches
         self.patchesColor = patchesColor
         self.patchesLabel = patchesLabel
+        self.pathToTransientCSV = pathToTransientCSV
         # xt-self-arg-tmpx
 
         return None
@@ -294,6 +297,41 @@ class aitoff(object):
                     label = f"{int(l)}%"
                 patch = mpatches.Patch(color=c, label=label)
                 handles.append(patch)
+
+            
+        if self.pathToTransientCSV:
+            import pandas as pd
+            transientDF = pd.read_csv(self.pathToTransientCSV)
+
+            ra_column = "ra" if "ra" in transientDF.columns else "RA" if "RA" in transientDF.columns else None
+            dec_column = "dec" if "dec" in transientDF.columns else "DEC" if "DEC" in transientDF.columns else None
+
+            if ra_column is None or dec_column is None:
+                available_columns = ", ".join(map(str, transientDF.columns.tolist()))
+                raise ValueError(
+                    f"Transient CSV '{self.pathToTransientCSV}' must contain RA/Dec columns named "
+                    f"'ra'/'dec' or 'RA'/'DEC'. Found columns: {available_columns}"
+                )
+
+            ra_values = transientDF[ra_column].to_numpy()
+            dec_values = transientDF[dec_column].to_numpy()
+            label_column = "name" if "name" in transientDF.columns else "Name" if "Name" in transientDF.columns else None
+            scatter_label = "Transient" if label_column is not None and transientDF[label_column].notna().any() else None
+
+            ax.scatter(
+                np.radians(-ra_values + 180),
+                np.radians(dec_values),
+                color="#dc322f",
+                alpha=0.8,
+                s=3,
+                marker="o",
+                edgecolors="#dc322f",
+                linewidths=0.5,
+                label=scatter_label,
+                zorder=29
+            )
+            circle = Line2D([0], [0], marker='o', linestyle='None', color='#dc322f', markerfacecolor='#dc322f', markeredgecolor='#dc322f', markersize=4, label='Transient')
+            handles.append(circle)
 
         if len(self.meta):
             data = ""
